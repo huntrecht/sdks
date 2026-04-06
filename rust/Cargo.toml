@@ -1,0 +1,23 @@
+[package]
+name = "huntrecht-sdk"
+version = "0.1.0"
+edition = "2021"
+description = "Official Rust SDK for the Huntrecht Platform API v1"
+license = "MIT"
+repository = "https://github.com/huntrecht/sdk-rust"
+keywords = ["huntrecht", "api", "sdk", "b2b", "ecommerce"]
+categories = ["api-bindings", "web-programming"]
+
+[dependencies]
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tokio = { version = "1", features = ["full"], optional = true }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+
+[features]
+default = ["rt-tokio"]
+rt-tokio = ["tokio"]

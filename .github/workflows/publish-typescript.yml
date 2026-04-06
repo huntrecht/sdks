@@ -1,0 +1,41 @@
+name: Publish — TypeScript SDK
+
+on:
+  push:
+    tags:
+      - 'typescript/v*'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    defaults:
+      run:
+        working-directory: sdk/typescript
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@huntrecht'
+      - run: npm ci
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npx vitest run
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: TypeScript SDK ${{ github.ref_name }}
+          generate_release_notes: true
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

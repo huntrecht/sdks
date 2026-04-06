@@ -1,0 +1,162 @@
+name: CI — All SDKs
+
+on:
+  pull_request:
+    paths:
+      - 'sdk/**'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'sdk/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+      typescript: ${{ steps.filter.outputs.typescript }}
+      go: ${{ steps.filter.outputs.go }}
+      ruby: ${{ steps.filter.outputs.ruby }}
+      rust: ${{ steps.filter.outputs.rust }}
+      proto: ${{ steps.filter.outputs.proto }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'sdk/python/**'
+              - 'sdk/proto/**'
+            typescript:
+              - 'sdk/typescript/**'
+              - 'sdk/proto/**'
+            go:
+              - 'sdk/go/**'
+              - 'sdk/proto/**'
+            ruby:
+              - 'sdk/ruby/**'
+              - 'sdk/proto/**'
+            rust:
+              - 'sdk/rust/**'
+              - 'sdk/proto/**'
+            proto:
+              - 'sdk/proto/**'
+
+  python:
+    needs: changes
+    if: ${{ needs.changes.outputs.python == 'true' || github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install -e "sdk/python[dev]"
+      - name: Run tests
+        run: pytest sdk/python/tests/ -v --tb=short
+      - name: Lint
+        run: ruff check sdk/python/huntrecht/
+      - name: Type check
+        run: mypy sdk/python/huntrecht/
+
+  typescript:
+    needs: changes
+    if: ${{ needs.changes.outputs.typescript == 'true' || github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: sdk/typescript/package-lock.json
+      - run: npm ci
+        working-directory: sdk/typescript
+      - name: Type check
+        run: npx tsc --noEmit
+        working-directory: sdk/typescript
+      - name: Build
+        run: npm run build
+        working-directory: sdk/typescript
+      - name: Test
+        run: npx vitest run
+        working-directory: sdk/typescript
+
+  go:
+    needs: changes
+    if: ${{ needs.changes.outputs.go == 'true' || github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache-dependency-path: sdk/go/go.sum
+      - run: go mod download
+        working-directory: sdk/go
+      - name: Vet
+        run: go vet ./...
+        working-directory: sdk/go
+      - name: Test
+        run: go test -v -race ./...
+        working-directory: sdk/go
+      - name: Build
+        run: go build ./...
+        working-directory: sdk/go
+
+  ruby:
+    needs: changes
+    if: ${{ needs.changes.outputs.ruby == 'true' || github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: sdk/ruby
+      - name: Test
+        run: bundle exec rake spec
+        working-directory: sdk/ruby
+
+  rust:
+    needs: changes
+    if: ${{ needs.changes.outputs.rust == 'true' || github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: sdk/rust
+      - name: Check
+        run: cargo check
+        working-directory: sdk/rust
+      - name: Test
+        run: cargo test
+        working-directory: sdk/rust
+      - name: Clippy
+        run: cargo clippy -- -D warnings
+        working-directory: sdk/rust
+
+  proto:
+    needs: changes
+    if: ${{ needs.changes.outputs.proto == 'true' || github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install protoc
+        run: sudo apt-get install -y protobuf-compiler
+      - name: Validate proto files
+        run: |
+          for f in sdk/proto/huntrecht/v1/*.proto; do
+            echo "Validating $f"
+            protoc --proto_path=sdk/proto --decode_raw < "$f" > /dev/null 2>&1 || \
+            protoc --proto_path=sdk/proto "$f" -o /dev/null
+          done

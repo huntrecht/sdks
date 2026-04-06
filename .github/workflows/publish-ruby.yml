@@ -1,0 +1,39 @@
+name: Publish — Ruby SDK
+
+on:
+  push:
+    tags:
+      - 'ruby/v*'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: rubygems
+    defaults:
+      run:
+        working-directory: sdk/ruby
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Run tests
+        run: bundle exec rake spec
+      - name: Build gem
+        run: gem build huntrecht-sdk.gemspec
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Ruby SDK ${{ github.ref_name }}
+          generate_release_notes: true
+          files: sdk/ruby/*.gem
+      - name: Publish to RubyGems
+        run: |
+          mkdir -p ~/.gem
+          echo "${{ secrets.GEM_HOST_API_KEY }}" > ~/.gem/credentials
+          chmod 0600 ~/.gem/credentials
+          gem push huntrecht-sdk-*.gem

@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Credit History Record Schema",
+  "description": "Unified schema for credit history data from external data providers",
+  "type": "object",
+  "required": [
+    "company_id",
+    "email",
+    "date",
+    "reference"
+  ],
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "External company identifier from data provider (will be mapped to Shopify B2B company ID)"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Company contact email"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Transaction date in ISO 8601 format"
+    },
+    "inflow": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Money received (credit) in base currency units"
+    },
+    "outflow": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Money spent (debit) in base currency units"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Transaction reference or description"
+    },
+    "account_name": {
+      "type": "string",
+      "description": "Account holder name"
+    },
+    "account_number": {
+      "type": "string",
+      "description": "Masked or full account number"
+    },
+    "bank": {
+      "type": "string",
+      "description": "Bank or financial institution name"
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code (e.g., USD, NGN, GBP)"
+    },
+    "shopify_company_id": {
+      "type": "string",
+      "description": "Mapped Shopify B2B company GID (enriched after extraction)"
+    },
+    "provider_id": {
+      "type": "string",
+      "description": "Unique identifier of the data provider"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional provider-specific metadata"
+    }
+  }
+}

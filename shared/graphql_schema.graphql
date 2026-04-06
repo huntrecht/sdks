@@ -1,0 +1,51 @@
+"""
+GraphQL schema for data provider credit history queries
+This is a reference schema - actual providers may have variations
+"""
+
+scalar DateTime
+
+type Query {
+  """Fetch credit history for a company"""
+  creditHistory(
+    companyId: ID!
+    startDate: DateTime
+    endDate: DateTime
+    limit: Int = 100
+    cursor: String
+  ): CreditHistoryConnection!
+}
+
+type CreditHistoryConnection {
+  edges: [CreditHistoryEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type CreditHistoryEdge {
+  node: CreditTransaction!
+  cursor: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String
+}
+
+type CreditTransaction {
+  id: ID!
+  companyId: ID!
+  email: String!
+  date: DateTime!
+  inflow: Float
+  outflow: Float
+  balance: Float
+  reference: String!
+  accountName: String
+  accountNumber: String
+  bank: String
+  currency: String
+  metadata: JSON
+}
+
+scalar JSON
