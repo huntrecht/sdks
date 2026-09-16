@@ -70,6 +70,11 @@ session-ses*
 # node
 node_modules/
 
+# rust build output (cargo check/test/clippy artifacts, never committed)
+rust/target/
+Cargo.lock
+!rust/Cargo.lock
+
 data/*.mov
 data/*.mp4
 data/*.avi

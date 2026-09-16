@@ -14,6 +14,7 @@ import {
   ValidationError,
   PermissionError,
 } from './errors.js';
+import { SDK_VERSION } from './version.js';
 
 const API_VERSION = 'v1';
 const DEFAULT_BASE_URL = 'https://api.huntrecht.com';
@@ -58,6 +59,7 @@ export class HuntrechtClient {
   readonly payments: PaymentsAPI;
   readonly subscriptions: SubscriptionsAPI;
   readonly credit: CreditAPI;
+  readonly creditRisk: CreditRiskAPI;
   readonly kyc: KycAPI;
   readonly quotes: QuotesAPI;
   readonly users: UsersAPI;
@@ -86,6 +88,7 @@ export class HuntrechtClient {
     this.payments = r.payments;
     this.subscriptions = r.subscriptions;
     this.credit = r.credit;
+    this.creditRisk = r.creditRisk;
     this.kyc = r.kyc;
     this.quotes = r.quotes;
     this.users = r.users;
@@ -121,7 +124,7 @@ export class HuntrechtClient {
 
     const headers: Record<string, string> = {
       'Accept': 'application/json',
-      'User-Agent': `huntrecht-sdk-js/0.1.0`,
+      'User-Agent': `huntrecht-sdk-js/${SDK_VERSION}`,
     };
     if (authRequired && this._accessToken) {
       headers['Authorization'] = `Bearer ${this._accessToken}`;
@@ -334,6 +337,36 @@ export class CreditAPI extends APIResource {
   }
 }
 
+export class CreditRiskAPI extends APIResource {
+  async getScore(customerId: string) {
+    return this.request<import('./types.js').RiskScoreResponse>('GET', '/credit-risk/score', { params: { customer_id: customerId } });
+  }
+  async assess(data: Record<string, unknown>) {
+    return this.request<Record<string, unknown>>('POST', '/credit-risk/assess', { json: data });
+  }
+  async getHistory(customerId: string, opts: { limit?: number } = {}) {
+    const { limit = 20 } = opts;
+    return this.request<import('./types.js').CreditHistoryResponse>('GET', '/data-connect/credit-history', {
+      params: { customer_id: customerId, limit },
+    });
+  }
+  async getAssessment(userId: string) {
+    return this.request<Record<string, unknown>>('GET', '/company/credit-assessment', { params: { user_id: userId } });
+  }
+  async requestAssessment(data: Record<string, unknown>) {
+    return this.request<Record<string, unknown>>('POST', '/company/credit-assessment/request', { json: data });
+  }
+  async getImprovementOptions() {
+    return this.request<Record<string, unknown>>('GET', '/credit-improvement/available-options');
+  }
+  async connectWallet(data: Record<string, unknown>) {
+    return this.request<Record<string, unknown>>('POST', '/credit-improvement/connect-wallet', { json: data });
+  }
+  async applyBoosts(data: Record<string, unknown>) {
+    return this.request<Record<string, unknown>>('POST', '/credit-improvement/apply-boosts', { json: data });
+  }
+}
+
 export class KycAPI extends APIResource {
   async list(opts: { page?: number; perPage?: number; status?: string } = {}) {
     const { page = 1, perPage = 20, status } = opts;
@@ -476,6 +509,7 @@ function createResources(client: HuntrechtClient) {
     payments: new PaymentsAPI(client),
     subscriptions: new SubscriptionsAPI(client),
     credit: new CreditAPI(client),
+    creditRisk: new CreditRiskAPI(client),
     kyc: new KycAPI(client),
     quotes: new QuotesAPI(client),
     users: new UsersAPI(client),

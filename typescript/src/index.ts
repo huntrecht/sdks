@@ -19,6 +19,7 @@
  */
 
 export { HuntrechtClient, type HuntrechtClientOptions } from './client.js';
+export { SDK_VERSION } from './version.js';
 export {
   HuntrechtError,
   AuthenticationError,
@@ -54,6 +55,9 @@ export type {
   CreditScoreData,
   CreditAssessmentData,
   CreditAssessmentRequest,
+  // Credit risk
+  RiskScoreResponse,
+  CreditHistoryResponse,
   // KYC
   KycSubmission,
   KycListResponse,
@@ -88,6 +92,7 @@ export type {
   PaymentsAPI,
   SubscriptionsAPI,
   CreditAPI,
+  CreditRiskAPI,
   KycAPI,
   QuotesAPI,
   UsersAPI,

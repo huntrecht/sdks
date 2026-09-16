@@ -69,6 +69,8 @@ case "$SDK" in
   typescript)
     if command -v sed &>/dev/null; then
       sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" "$SDK_DIR/$SDK/package.json"
+      # Keep the User-Agent version in sync (mirrors the python __init__ fix)
+      sed -i "s/^export const SDK_VERSION = \".*\"/export const SDK_VERSION = \"$VERSION\"/" "$SDK_DIR/$SDK/src/version.ts"
     fi
     ;;
   go)

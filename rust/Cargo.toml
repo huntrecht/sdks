@@ -20,4 +20,4 @@ tokio = { version = "1", features = ["full"] }
 
 [features]
 default = ["rt-tokio"]
-rt-tokio = ["tokio"]
+rt-tokio = ["tokio/rt", "tokio/time"]

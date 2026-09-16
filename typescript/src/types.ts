@@ -313,3 +313,16 @@ export interface LinkedAccountsResponse {
   banks: LinkedBank[];
   has_linked_payments: boolean;
 }
+
+// Credit risk
+export interface RiskScoreResponse {
+  score: number;
+  risk_level: string;
+  [key: string]: unknown;
+}
+
+export interface CreditHistoryResponse {
+  data: Record<string, unknown>[];
+  count?: number;
+  [key: string]: unknown;
+}

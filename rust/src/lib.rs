@@ -14,7 +14,7 @@
 ///         .client_secret("your_secret")
 ///         .build()?;
 ///
-///     let orders = client.orders().list().await?;
+///     let orders = client.orders().list(1, 20, None).await?;
 ///     for order in orders.data {
 ///         println!("Order {}: {}", order.id, order.commodity);
 ///     }
