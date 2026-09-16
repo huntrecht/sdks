@@ -14,13 +14,13 @@ jobs:
     environment: crates
     defaults:
       run:
-        working-directory: sdk/rust
+        working-directory: rust
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: sdk/rust
+          workspaces: rust
       - name: Check
         run: cargo check
       - name: Test

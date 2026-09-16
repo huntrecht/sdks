@@ -62,6 +62,8 @@ case "$SDK" in
   python)
     if command -v sed &>/dev/null; then
       sed -i "s/^version = \".*\"/version = \"$VERSION\"/" "$SDK_DIR/$SDK/pyproject.toml"
+      # Keep the runtime User-Agent version in sync (was silently drifting)
+      sed -i "s/^__version__ = \".*\"/__version__ = \"$VERSION\"/" "$SDK_DIR/$SDK/huntrecht/__init__.py"
     fi
     ;;
   typescript)

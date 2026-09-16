@@ -15,7 +15,7 @@ jobs:
     environment: npm
     defaults:
       run:
-        working-directory: sdk/typescript
+        working-directory: typescript
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
