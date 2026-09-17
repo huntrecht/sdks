@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write # for npm provenance/OIDC if trusted publishing is configured
 
 jobs:
   publish:
