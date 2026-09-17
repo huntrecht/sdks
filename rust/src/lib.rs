@@ -14,7 +14,8 @@
 ///         .client_secret("your_secret")
 ///         .build()?;
 ///
-///     let orders = client.orders().list(1, 20, None).await?;
+///     let orders: huntrecht_sdk::types::OrderList =
+///         serde_json::from_value(client.orders().list(1, 20, None).await?)?;
 ///     for order in orders.data {
 ///         println!("Order {}: {}", order.id, order.commodity);
 ///     }

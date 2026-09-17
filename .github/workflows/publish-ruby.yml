@@ -32,8 +32,8 @@ jobs:
           generate_release_notes: true
           files: ruby/*.gem
       - name: Publish to RubyGems
+        env:
+          GEM_HOST_API_KEY: ${{ secrets.GEM_HOST_API_KEY }}
         run: |
-          mkdir -p ~/.gem
-          printf "---\n:rubygems_api_key: %s\n" "${{ secrets.GEM_HOST_API_KEY }}" > ~/.gem/credentials
-          chmod 0600 ~/.gem/credentials
+          : "${GEM_HOST_API_KEY:?GEM_HOST_API_KEY must be set}"
           gem push huntrecht-sdk-*.gem
