@@ -19,11 +19,11 @@ sdk/
 
 | Language | Package | Status |
 |----------|---------|--------|
-| Python | `huntrecht-sdk` | ✅ v0.1.0 |
-| TypeScript/JavaScript | `@huntrecht/sdk` | ✅ v0.1.0 |
-| Go | `github.com/huntrecht/sdk-go` | 🚧 Coming Soon |
-| Ruby | `huntrecht-sdk` | 🚧 Coming Soon |
-| Rust | `huntrecht-sdk` | 🚧 Coming Soon |
+| Python | `huntrecht-sdk` | ✅ v0.1.2 |
+| TypeScript/JavaScript | `@huntrecht/sdk` | ✅ v0.1.2 |
+| Go | `github.com/huntrecht/sdk-go` | ✅ v0.1.2 |
+| Ruby | `huntrecht-sdk` | ✅ v0.1.2 |
+| Rust | `huntrecht-sdk` | ✅ v0.1.2 |
 
 ## API Coverage (v1)
 
