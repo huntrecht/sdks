@@ -5,7 +5,7 @@
 /// # Example
 ///
 /// ```no_run
-/// use huntrecht::Client;
+/// use huntrecht_sdk::Client;
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {

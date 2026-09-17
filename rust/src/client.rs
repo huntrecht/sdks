@@ -89,6 +89,7 @@ impl Builder {
     }
 }
 
+#[allow(dead_code)]
 struct TokenState {
     access: String,
     refresh: Option<String>,
