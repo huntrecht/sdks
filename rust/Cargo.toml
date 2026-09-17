@@ -1,6 +1,6 @@
 [package]
 name = "huntrecht-sdk"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2021"
 description = "Official Rust SDK for the Huntrecht Platform API v1"
 license = "MIT"
