@@ -14283,6 +14283,113 @@
         ]
       }
     },
+    "/api/gpu-subscriptions/catalog": {
+      "get": {
+        "description": "Customer rates and location inquiry status; no implied reservation.",
+        "operationId": "greencloud_catalog_api_gpu_subscriptions_catalog_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Greencloud Catalog",
+        "tags": [
+          "GPU Subscriptions",
+          "GPU Subscriptions"
+        ]
+      }
+    },
+    "/api/gpu-subscriptions/catalog/view": {
+      "get": {
+        "description": "Human-readable availability and price basis for prospective subscribers.",
+        "operationId": "greencloud_catalog_view_api_gpu_subscriptions_catalog_view_get",
+        "responses": {
+          "200": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Greencloud Catalog View",
+        "tags": [
+          "GPU Subscriptions",
+          "GPU Subscriptions"
+        ]
+      }
+    },
+    "/api/gpu-subscriptions/catalog/{sku}/quote": {
+      "get": {
+        "operationId": "greencloud_quote_api_gpu_subscriptions_catalog__sku__quote_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sku",
+            "required": true,
+            "schema": {
+              "title": "Sku",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "nodes",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "title": "Nodes",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "term_months",
+            "required": false,
+            "schema": {
+              "default": 12,
+              "minimum": 1,
+              "title": "Term Months",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Greencloud Quote",
+        "tags": [
+          "GPU Subscriptions",
+          "GPU Subscriptions"
+        ]
+      }
+    },
     "/api/gpu-subscriptions/{quote_ref}/down-payment-invoice": {
       "get": {
         "description": "Generate down payment invoice for GPU subscription.\n\nReturns PDF or HTML invoice document.",
@@ -14372,6 +14479,229 @@
         "tags": [
           "GPU Subscriptions",
           "GPU Subscriptions"
+        ]
+      }
+    },
+    "/api/greencloud/applications": {
+      "get": {
+        "description": "Staff-only paginated review list; applicants cannot list submissions.",
+        "operationId": "list_greencloud_applications_api_greencloud_applications_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "maximum": 100000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Greencloud Applications",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      },
+      "post": {
+        "description": "Store an inquiry and private diagram; never grant access or reserve capacity.",
+        "operationId": "submit_greencloud_application_api_greencloud_applications_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Submit Greencloud Application",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/applications/notice": {
+      "get": {
+        "description": "Return the exact notice version a client must accept before submission.",
+        "operationId": "get_preagreement_notice_api_greencloud_applications_notice_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Preagreement Notice",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/applications/{reference}": {
+      "get": {
+        "description": "Staff-only application detail.",
+        "operationId": "get_greencloud_application_api_greencloud_applications__reference__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reference",
+            "required": true,
+            "schema": {
+              "title": "Reference",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Greencloud Application",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/applications/{reference}/diagram": {
+      "get": {
+        "description": "Staff-only private diagram download.",
+        "operationId": "get_greencloud_application_diagram_api_greencloud_applications__reference__diagram_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reference",
+            "required": true,
+            "schema": {
+              "title": "Reference",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Greencloud Application Diagram",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/applications/{reference}/workload-evidence": {
+      "get": {
+        "description": "Staff-only download for attached workload evidence.",
+        "operationId": "get_greencloud_workload_evidence_api_greencloud_applications__reference__workload_evidence_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reference",
+            "required": true,
+            "schema": {
+              "title": "Reference",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Greencloud Workload Evidence",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
         ]
       }
     },
