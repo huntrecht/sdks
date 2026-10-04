@@ -16311,6 +16311,243 @@
         ]
       }
     },
+    "/api/marketing/newsletter/track/click": {
+      "get": {
+        "operationId": "track_click_api_marketing_newsletter_track_click_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Email",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cid",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Cid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "url",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Url",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sig",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Sig",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Track Click",
+        "tags": [
+          "Product Marketing",
+          "Product Marketing"
+        ]
+      }
+    },
+    "/api/marketing/newsletter/track/open": {
+      "get": {
+        "operationId": "track_open_api_marketing_newsletter_track_open_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Email",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cid",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Cid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sig",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Sig",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Track Open",
+        "tags": [
+          "Product Marketing",
+          "Product Marketing"
+        ]
+      }
+    },
+    "/api/marketing/newsletter/track/unsubscribe": {
+      "get": {
+        "operationId": "track_unsubscribe_get_api_marketing_newsletter_track_unsubscribe_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Email",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sig",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Sig",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Track Unsubscribe Get",
+        "tags": [
+          "Product Marketing",
+          "Product Marketing"
+        ]
+      },
+      "post": {
+        "description": "One-click (RFC 8058) POST variant of the unsubscribe above.",
+        "operationId": "track_unsubscribe_post_api_marketing_newsletter_track_unsubscribe_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Email",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sig",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Sig",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Track Unsubscribe Post",
+        "tags": [
+          "Product Marketing",
+          "Product Marketing"
+        ]
+      }
+    },
     "/api/marketing/recipients": {
       "get": {
         "description": "Get list of newsletter recipients",
