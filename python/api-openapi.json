@@ -14329,6 +14329,7 @@
     },
     "/api/gpu-subscriptions/catalog/{sku}/quote": {
       "get": {
+        "description": "Commercial-stage quote (deposit terms). Enterprise or active trial.\n\nThe public /catalog list stays open; application submission stays\npublic. Trial callers are flagged (greencloud_trial_evaluation) for\ndownstream commercial gating.",
         "operationId": "greencloud_quote_api_gpu_subscriptions_catalog__sku__quote_get",
         "parameters": [
           {
@@ -14392,7 +14393,7 @@
     },
     "/api/gpu-subscriptions/{quote_ref}/down-payment-invoice": {
       "get": {
-        "description": "Generate down payment invoice for GPU subscription.\n\nReturns PDF or HTML invoice document.",
+        "description": "Generate down payment invoice for GPU subscription.\nEnterprise or active trial (commercial stage).\n\nReturns PDF or HTML invoice document.",
         "operationId": "get_down_payment_invoice_api_gpu_subscriptions__quote_ref__down_payment_invoice_get",
         "parameters": [
           {
@@ -14807,6 +14808,43 @@
           "Iceman",
           "Iceman"
         ]
+      }
+    },
+    "/api/invites/teammate": {
+      "post": {
+        "description": "Invite a teammate. Any authenticated user may invite; the invited\nuser always inherits the default `user` role only \u2014 role assignment\nstays with staff/admin/compliance/manager via /api/admin/invite-user.",
+        "operationId": "invite_teammate_api_invites_teammate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeammateInviteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Invite Teammate"
       }
     },
     "/api/market-intel/analytics": {
@@ -17502,6 +17540,23 @@
         "summary": "Newsletter Shop Now"
       }
     },
+    "/api/onboarding/progress": {
+      "get": {
+        "description": "Gamified onboarding progress + entitlement-gated pane map.\n\nSteps are derived from existing signals (no new tables). Panes carry\nvisible|locked|hidden states per plan and permissions. Trial users\nresolve to pro; GreenCloud evaluation state is reported separately.",
+        "operationId": "get_onboarding_progress_api_onboarding_progress_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Onboarding Progress"
+      }
+    },
     "/api/orders": {
       "get": {
         "description": "Get all orders for the current user",
@@ -18591,6 +18646,31 @@
       "get": {
         "description": "Get all subscriptions with approved payment terms awaiting provider payment",
         "operationId": "get_provider_pending_payments_api_payments_provider_pending_payments_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -18599,6 +18679,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
           }
         },
         "summary": "Get Provider Pending Payments",
@@ -18669,6 +18759,29 @@
                 }
               ],
               "title": "Payment Terms Filter"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
             }
           }
         ],
@@ -18787,6 +18900,31 @@
       "get": {
         "description": "Get all subscriptions with multiple provider allocations (syndicated deals)",
         "operationId": "get_provider_syndicated_deals_api_payments_provider_syndicated_deals_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -18795,6 +18933,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
           }
         },
         "summary": "Get Provider Syndicated Deals",
@@ -18959,6 +19107,31 @@
       "get": {
         "description": "Get orders for supplier's own products",
         "operationId": "get_supplier_orders_api_payments_supplier_orders_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -18967,6 +19140,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
           }
         },
         "summary": "Get Supplier Orders",
@@ -19063,6 +19246,31 @@
       "get": {
         "description": "Get all subscriptions with pending payment terms approval for suppliers",
         "operationId": "get_supplier_pending_terms_api_payments_supplier_pending_terms_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -19071,6 +19279,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
           }
         },
         "summary": "Get Supplier Pending Terms",
@@ -23648,6 +23866,55 @@
         ]
       }
     },
+    "/api/suppliers/directory": {
+      "get": {
+        "description": "Public-safe supplier directory (any authenticated user).\n\nVerified suppliers only (supplier role + verified email + approved\nonboarding). No PII: no emails, names, or wallet data.",
+        "operationId": "get_public_supplier_directory_api_suppliers_directory_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Public Supplier Directory",
+        "tags": [
+          "Suppliers",
+          "suppliers"
+        ]
+      }
+    },
     "/api/suppliers/my-info": {
       "get": {
         "description": "Get current supplier's information and linked Shopify vendor data",
@@ -23663,6 +23930,27 @@
           }
         },
         "summary": "Get My Supplier Info",
+        "tags": [
+          "Suppliers",
+          "suppliers"
+        ]
+      }
+    },
+    "/api/suppliers/my-inventory": {
+      "get": {
+        "description": "Read-only vendor inventory via the CommerceProvider port.\n\nReturns normalized product rows (Shopify system of record). Suppliers\nwithout a linked vendor get an empty list, not an error.",
+        "operationId": "get_my_inventory_api_suppliers_my_inventory_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get My Inventory",
         "tags": [
           "Suppliers",
           "suppliers"
@@ -24463,6 +24751,38 @@
           }
         },
         "summary": "Check Developer Role"
+      }
+    },
+    "/api/user/notification-preferences": {
+      "get": {
+        "description": "Read the caller's own notification preferences (opt-out map).",
+        "operationId": "get_notification_preferences_api_user_notification_preferences_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Notification Preferences"
+      },
+      "put": {
+        "description": "Merge the caller's notification preferences (opt-out map).",
+        "operationId": "update_notification_preferences_api_user_notification_preferences_put",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Update Notification Preferences"
       }
     },
     "/api/user/payout-accounts": {
@@ -28051,6 +28371,62 @@
         ]
       }
     },
+    "/api/wallet/withdrawals/mine": {
+      "get": {
+        "description": "List the caller's own withdrawal requests (read-only status view).",
+        "operationId": "list_my_withdrawals_api_wallet_withdrawals_mine_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List My Withdrawals",
+        "tags": [
+          "Wallet",
+          "Wallet"
+        ]
+      }
+    },
     "/app": {
       "get": {
         "description": "Serve the B2B storefront React app (publicly accessible)",
@@ -30778,6 +31154,10 @@
           "title": "Email",
           "type": "string"
         },
+        "invite_token": {
+          "title": "Invite Token",
+          "type": "string"
+        },
         "password": {
           "title": "Password",
           "type": "string"
@@ -30952,6 +31332,10 @@
       "properties": {
         "email": {
           "title": "Email",
+          "type": "string"
+        },
+        "invite_token": {
+          "title": "Invite Token",
           "type": "string"
         },
         "password": {
@@ -36359,6 +36743,41 @@
         }
       },
       "title": "SystemPayoutSourceUpdate",
+      "type": "object"
+    },
+    "TeammateInviteRequest": {
+      "properties": {
+        "email": {
+          "title": "Email",
+          "type": "string"
+        },
+        "first_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "First Name"
+        },
+        "last_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Name"
+        }
+      },
+      "required": [
+        "email"
+      ],
+      "title": "TeammateInviteRequest",
       "type": "object"
     },
     "ThemeUpdate": {
