@@ -24083,6 +24083,27 @@
         ]
       }
     },
+    "/api/suppliers/ratings": {
+      "post": {
+        "description": "Rate a supplier after a completed subscription (counterparty only).\n\nOne rating per subscription per rater; editable within 7 days.\nDisplay rule (3-rating minimum) applies at read time.",
+        "operationId": "submit_supplier_rating_api_suppliers_ratings_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Submit Supplier Rating",
+        "tags": [
+          "Suppliers",
+          "suppliers"
+        ]
+      }
+    },
     "/api/suppliers/sync-from-shopify": {
       "post": {
         "description": "Sync all vendors from Shopify products to create supplier users\nAdmin-only endpoint\n\nThis endpoint:\n1. Fetches all unique vendors from Shopify products via Admin API\n2. Creates new supplier users for vendors not in the system\n3. Updates existing supplier users with Shopify vendor data\n4. Auto-assigns 'supplier' role with appropriate permissions",
