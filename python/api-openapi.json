@@ -14559,6 +14559,53 @@
         ]
       }
     },
+    "/api/greencloud/applications/export": {
+      "get": {
+        "description": "Export the complete queue, including original supplied contact data.",
+        "operationId": "export_greencloud_applications_api_greencloud_applications_export_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "default": "xlsx",
+              "enum": [
+                "csv",
+                "xlsx"
+              ],
+              "title": "Format",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Export Greencloud Applications",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
     "/api/greencloud/applications/notice": {
       "get": {
         "description": "Return the exact notice version a client must accept before submission.",
@@ -14658,6 +14705,61 @@
           }
         },
         "summary": "Get Greencloud Application Diagram",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/applications/{reference}/summary.{format}": {
+      "get": {
+        "description": "Staff-only document containing no contact fields or user-authored prose.",
+        "operationId": "download_greencloud_summary_api_greencloud_applications__reference__summary__format__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reference",
+            "required": true,
+            "schema": {
+              "title": "Reference",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "format",
+            "required": true,
+            "schema": {
+              "enum": [
+                "pdf",
+                "docx"
+              ],
+              "title": "Format",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download Greencloud Summary",
         "tags": [
           "GreenCloud Applications",
           "GreenCloud Intake"
@@ -23863,6 +23965,212 @@
         "tags": [
           "Subscriptions",
           "Subscriptions"
+        ]
+      }
+    },
+    "/api/suppliers/analytics/demand": {
+      "get": {
+        "description": "Demand sensing: monthly subscription counts + volumes for a vendor.",
+        "operationId": "get_supplier_analytics_demand_api_suppliers_analytics_demand_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Vendor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "months",
+            "required": false,
+            "schema": {
+              "default": 6,
+              "title": "Months",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Supplier Analytics Demand",
+        "tags": [
+          "Suppliers",
+          "suppliers"
+        ]
+      }
+    },
+    "/api/suppliers/analytics/overview": {
+      "get": {
+        "description": "Product analysis for a vendor: counts, stock value, price spread.",
+        "operationId": "get_supplier_analytics_overview_api_suppliers_analytics_overview_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Vendor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Supplier Analytics Overview",
+        "tags": [
+          "Suppliers",
+          "suppliers"
+        ]
+      }
+    },
+    "/api/suppliers/analytics/performance": {
+      "get": {
+        "description": "Supplier performance: ratings, fulfillment, approval and payout speed.",
+        "operationId": "get_supplier_analytics_performance_api_suppliers_analytics_performance_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Vendor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Supplier Analytics Performance",
+        "tags": [
+          "Suppliers",
+          "suppliers"
+        ]
+      }
+    },
+    "/api/suppliers/analytics/prices": {
+      "get": {
+        "description": "Price comparison: invoiced averages by month vs current catalog.",
+        "operationId": "get_supplier_analytics_prices_api_suppliers_analytics_prices_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Vendor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Supplier Analytics Prices",
+        "tags": [
+          "Suppliers",
+          "suppliers"
         ]
       }
     },
