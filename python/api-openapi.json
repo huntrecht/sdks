@@ -12951,6 +12951,141 @@
         ]
       }
     },
+    "/api/data/file": {
+      "get": {
+        "description": "Download one object from a mapped root (staff/admin only).",
+        "operationId": "download_object_api_data_file_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "root",
+            "required": false,
+            "schema": {
+              "default": "data",
+              "maxLength": 64,
+              "minLength": 1,
+              "title": "Root",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "maxLength": 1024,
+              "minLength": 1,
+              "title": "Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download Object",
+        "tags": [
+          "Data Broker",
+          "Data Broker"
+        ]
+      }
+    },
+    "/api/data/list": {
+      "get": {
+        "description": "List object keys under a mapped root (staff/admin only).",
+        "operationId": "list_objects_api_data_list_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "root",
+            "required": false,
+            "schema": {
+              "default": "data",
+              "maxLength": 64,
+              "minLength": 1,
+              "title": "Root",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "prefix",
+            "required": false,
+            "schema": {
+              "default": "",
+              "maxLength": 256,
+              "title": "Prefix",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 200,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Objects",
+        "tags": [
+          "Data Broker",
+          "Data Broker"
+        ]
+      }
+    },
     "/api/debug/check-leaks": {
       "post": {
         "description": "Manually trigger a check for leaked database connections (admin only).\n\nThis scans all active connections and logs warnings for any held\nlonger than the configured thresholds (30s warning, 60s critical).",
