@@ -8932,6 +8932,58 @@
         ]
       }
     },
+    "/api/commodity/offers/{offer_id}": {
+      "put": {
+        "description": "Edit an offer's terms. Owner only; locked once accepted (trade_id set)\nor cancelled. Unaccepted offers are freely editable.",
+        "operationId": "update_offer_api_commodity_offers__offer_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOfferRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Offer",
+        "tags": [
+          "Commodity Trading",
+          "Commodity Trading"
+        ]
+      }
+    },
     "/api/commodity/offers/{offer_id}/accept": {
       "post": {
         "description": "Accept an offer and create a trade with smart contract integration.\n\nNote: On-chain operations run in background to avoid blocking the API response.",
@@ -38569,6 +38621,102 @@
         }
       },
       "title": "UpdateMachineTrader",
+      "type": "object"
+    },
+    "UpdateOfferRequest": {
+      "description": "Editable subset: terms only. Commodity type, roles, and workflow\ntemplate are immutable once join requests may exist.",
+      "properties": {
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "delivery_terms": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delivery Terms"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expires At"
+        },
+        "min_quantity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Min Quantity"
+        },
+        "payment_terms": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Payment Terms"
+        },
+        "price_per_unit": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Price Per Unit"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        }
+      },
+      "title": "UpdateOfferRequest",
       "type": "object"
     },
     "UpdateSubscriptionPaymentMethodRequest": {
