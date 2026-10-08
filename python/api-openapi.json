@@ -8725,6 +8725,27 @@
         ]
       }
     },
+    "/api/commodity/invitations/mine": {
+      "get": {
+        "description": "Pending trade invitations for the current user (private offers).",
+        "operationId": "list_my_invitations_api_commodity_invitations_mine_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List My Invitations",
+        "tags": [
+          "Commodity Trading",
+          "Commodity Trading"
+        ]
+      }
+    },
     "/api/commodity/my-join-requests": {
       "get": {
         "description": "List user's join requests across all offers.",
@@ -14313,6 +14334,49 @@
         "tags": [
           "EVM Settlement",
           "EVM Settlement"
+        ]
+      }
+    },
+    "/api/geopolitics/briefs": {
+      "get": {
+        "description": "Recent briefs delivered to the current user (powers the news pane).",
+        "operationId": "list_briefs_api_geopolitics_briefs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Briefs",
+        "tags": [
+          "Geopolitics",
+          "Geopolitics"
         ]
       }
     },
@@ -24850,6 +24914,27 @@
         ]
       }
     },
+    "/api/trade-calls/constraints": {
+      "get": {
+        "description": "Platform booking constraints for the picker (notice, slot size).",
+        "operationId": "get_constraints_api_trade_calls_constraints_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Constraints",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
     "/api/trade-calls/mine": {
       "get": {
         "description": "All calls across trades the user participates in.",
@@ -25146,6 +25231,48 @@
           }
         },
         "summary": "Decline Document",
+        "tags": [
+          "Trade Documents",
+          "Trade Documents"
+        ]
+      }
+    },
+    "/api/trade-documents/{doc_id}/download": {
+      "get": {
+        "description": "Authorized download: resolves App Storage, local, or data-URL bytes.",
+        "operationId": "download_document_api_trade_documents__doc_id__download_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doc_id",
+            "required": true,
+            "schema": {
+              "title": "Doc Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download Document",
         "tags": [
           "Trade Documents",
           "Trade Documents"
