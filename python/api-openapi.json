@@ -10192,7 +10192,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/fastapi___compat__v2__Body_upload_trade_document_api_commodity_trades__trade_id__documents_post__2"
+                "$ref": "#/components/schemas/Body_upload_trade_document_api_commodity_trades__trade_id__documents_post"
               }
             }
           },
@@ -10219,108 +10219,6 @@
           }
         },
         "summary": "Upload Trade Document",
-        "tags": [
-          "Commodity Trading",
-          "Commodity Trading"
-        ]
-      }
-    },
-    "/api/commodity/trades/{trade_id}/documents/{doc_id}/accept": {
-      "put": {
-        "description": "Accept a trade document (buyer role only).",
-        "operationId": "accept_document_api_commodity_trades__trade_id__documents__doc_id__accept_put",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "trade_id",
-            "required": true,
-            "schema": {
-              "title": "Trade Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "path",
-            "name": "doc_id",
-            "required": true,
-            "schema": {
-              "title": "Doc Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Accept Document",
-        "tags": [
-          "Commodity Trading",
-          "Commodity Trading"
-        ]
-      }
-    },
-    "/api/commodity/trades/{trade_id}/documents/{doc_id}/decline": {
-      "put": {
-        "description": "Decline a trade document.",
-        "operationId": "decline_document_api_commodity_trades__trade_id__documents__doc_id__decline_put",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "trade_id",
-            "required": true,
-            "schema": {
-              "title": "Trade Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "path",
-            "name": "doc_id",
-            "required": true,
-            "schema": {
-              "title": "Doc Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Decline Document",
         "tags": [
           "Commodity Trading",
           "Commodity Trading"
@@ -14945,7 +14843,7 @@
     },
     "/api/iceman/chat": {
       "post": {
-        "description": "Send a message to Iceman AI assistant",
+        "description": "Send a message to Iceman AI assistant (plan-gated, trade-scopeable).",
         "operationId": "iceman_chat_api_iceman_chat_post",
         "requestBody": {
           "content": {
@@ -14986,7 +14884,7 @@
     },
     "/api/iceman/clear-context": {
       "post": {
-        "description": "Clear Iceman conversation context",
+        "description": "Clear Iceman conversation context (DB notes are preserved).",
         "operationId": "clear_iceman_context_api_iceman_clear_context_post",
         "responses": {
           "200": {
@@ -15007,7 +14905,7 @@
     },
     "/api/iceman/context": {
       "get": {
-        "description": "Get Iceman context for current user",
+        "description": "Get Iceman context for current user (plan + memory notes).",
         "operationId": "get_iceman_context_api_iceman_context_get",
         "responses": {
           "200": {
@@ -15028,8 +14926,51 @@
     },
     "/api/iceman/history": {
       "get": {
-        "description": "Get Iceman chat history",
+        "description": "Get recent Iceman chat history for the current user.",
         "operationId": "get_iceman_history_api_iceman_history_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Iceman History",
+        "tags": [
+          "Iceman",
+          "Iceman"
+        ]
+      }
+    },
+    "/api/iceman/skills": {
+      "get": {
+        "description": "List Iceman skills available to the current user.",
+        "operationId": "get_iceman_skills_api_iceman_skills_get",
         "responses": {
           "200": {
             "content": {
@@ -15040,7 +14981,7 @@
             "description": "Successful Response"
           }
         },
-        "summary": "Get Iceman History",
+        "summary": "Get Iceman Skills",
         "tags": [
           "Iceman",
           "Iceman"
@@ -24685,6 +24626,553 @@
         "summary": "Validate Terrapay Country"
       }
     },
+    "/api/trade-calls/all": {
+      "get": {
+        "description": "Back-office triage across trades (staff only).",
+        "operationId": "list_all_calls_api_trade_calls_all_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "provider_status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Provider Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List All Calls",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-calls/by-trade/{trade_id}": {
+      "get": {
+        "description": "Calls for one trade. Participants, or staff (back-office oversight).",
+        "operationId": "list_trade_calls_api_trade_calls_by_trade__trade_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trade_id",
+            "required": true,
+            "schema": {
+              "title": "Trade Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Trade Calls",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-calls/mine": {
+      "get": {
+        "description": "All calls across trades the user participates in.",
+        "operationId": "list_my_calls_api_trade_calls_mine_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List My Calls",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-calls/schedule": {
+      "post": {
+        "description": "Schedule a procedure call: participant-gated, Cal.com mint attempted.",
+        "operationId": "schedule_call_api_trade_calls_schedule_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleCallRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Schedule Call",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-calls/{call_id}/cancel": {
+      "post": {
+        "operationId": "cancel_call_api_trade_calls__call_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Call",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-calls/{call_id}/complete": {
+      "post": {
+        "operationId": "complete_call_api_trade_calls__call_id__complete_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Complete Call",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-calls/{call_id}/retry-mint": {
+      "post": {
+        "description": "Retry Cal.com mint for calls stuck in provider pending.",
+        "operationId": "retry_mint_api_trade_calls__call_id__retry_mint_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Retry Mint",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-calls/{call_id}/transcript": {
+      "post": {
+        "description": "Persist a call transcript (participants only) + extract action items.",
+        "operationId": "save_transcript_api_trade_calls__call_id__transcript_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranscriptRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save Transcript",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-documents/{doc_id}/decline": {
+      "put": {
+        "description": "Explicit rejection stamp. Participant-gated (any participant may flag).",
+        "operationId": "decline_document_api_trade_documents__doc_id__decline_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doc_id",
+            "required": true,
+            "schema": {
+              "title": "Doc Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Decline Document",
+        "tags": [
+          "Trade Documents",
+          "Trade Documents"
+        ]
+      }
+    },
+    "/api/trade-documents/{doc_id}/review": {
+      "post": {
+        "description": "Review a trade document against agreed terms. Participant-gated.",
+        "operationId": "review_document_api_trade_documents__doc_id__review_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doc_id",
+            "required": true,
+            "schema": {
+              "title": "Doc Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Review Document",
+        "tags": [
+          "Trade Documents",
+          "Trade Documents"
+        ]
+      }
+    },
+    "/api/trade-insights/subscriptions": {
+      "get": {
+        "description": "List the current user's alert subscriptions + last delivery.",
+        "operationId": "list_subscriptions_api_trade_insights_subscriptions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Subscriptions",
+        "tags": [
+          "Trade Insights",
+          "Trade Insights"
+        ]
+      },
+      "post": {
+        "description": "Create or update a price-alert subscription (upsert per scope).",
+        "operationId": "create_subscription_api_trade_insights_subscriptions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Subscription",
+        "tags": [
+          "Trade Insights",
+          "Trade Insights"
+        ]
+      }
+    },
+    "/api/trade-insights/subscriptions/{subscription_id}": {
+      "delete": {
+        "description": "Deactivate (soft-delete) one of the user's subscriptions.",
+        "operationId": "delete_subscription_api_trade_insights_subscriptions__subscription_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscription_id",
+            "required": true,
+            "schema": {
+              "title": "Subscription Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Subscription",
+        "tags": [
+          "Trade Insights",
+          "Trade Insights"
+        ]
+      }
+    },
     "/api/transactions/settlements": {
       "get": {
         "description": "Proxy endpoint for market-intelligence to fetch user settlements",
@@ -31861,6 +32349,36 @@
       "title": "Body_upload_order_dataset_upload_order_quote_dataset_post",
       "type": "object"
     },
+    "Body_upload_trade_document_api_commodity_trades__trade_id__documents_post": {
+      "properties": {
+        "document_type": {
+          "title": "Document Type",
+          "type": "string"
+        },
+        "file": {
+          "contentMediaType": "application/octet-stream",
+          "title": "File",
+          "type": "string"
+        },
+        "step_number": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Step Number"
+        }
+      },
+      "required": [
+        "document_type",
+        "file"
+      ],
+      "title": "Body_upload_trade_document_api_commodity_trades__trade_id__documents_post",
+      "type": "object"
+    },
     "BridgeTransferRequest": {
       "properties": {
         "amount": {
@@ -36111,6 +36629,69 @@
       "title": "ResumeTradeRequest",
       "type": "object"
     },
+    "ScheduleCallRequest": {
+      "properties": {
+        "attendee_email": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Attendee Email"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "maxLength": 2000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Notes"
+        },
+        "procedure_ref": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Procedure Ref"
+        },
+        "scheduled_at": {
+          "description": "ISO datetime of the slot",
+          "title": "Scheduled At",
+          "type": "string"
+        },
+        "time_zone": {
+          "default": "UTC",
+          "maxLength": 60,
+          "title": "Time Zone",
+          "type": "string"
+        },
+        "trade_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Trade Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "trade_id",
+        "scheduled_at"
+      ],
+      "title": "ScheduleCallRequest",
+      "type": "object"
+    },
     "SellingPlanInput": {
       "properties": {
         "adjustmentType": {
@@ -36922,6 +37503,54 @@
       "title": "StepVerificationRequest",
       "type": "object"
     },
+    "SubscriptionCreate": {
+      "properties": {
+        "commodity": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Commodity",
+          "type": "string"
+        },
+        "cooldown_minutes": {
+          "default": 60,
+          "maximum": 1440.0,
+          "minimum": 5.0,
+          "title": "Cooldown Minutes",
+          "type": "integer"
+        },
+        "fx_pairs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fx Pairs",
+          "type": "array"
+        },
+        "threshold_pct": {
+          "default": 5.0,
+          "exclusiveMinimum": 0.0,
+          "maximum": 100.0,
+          "title": "Threshold Pct",
+          "type": "number"
+        },
+        "trade_id": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Trade Id"
+        }
+      },
+      "required": [
+        "commodity"
+      ],
+      "title": "SubscriptionCreate",
+      "type": "object"
+    },
     "SubscriptionRequest": {
       "properties": {
         "customer_id": {
@@ -37520,6 +38149,33 @@
         "created_at"
       ],
       "title": "TradeResponse",
+      "type": "object"
+    },
+    "TranscriptRequest": {
+      "properties": {
+        "lang": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Lang"
+        },
+        "text": {
+          "maxLength": 200000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "TranscriptRequest",
       "type": "object"
     },
     "TransferRequest": {
@@ -38344,50 +39000,6 @@
         "steps"
       ],
       "title": "WorkflowTemplateRequest",
-      "type": "object"
-    },
-    "fastapi___compat__v2__Body_upload_trade_document_api_commodity_trades__trade_id__documents_post__1": {
-      "properties": {
-        "file": {
-          "contentMediaType": "application/octet-stream",
-          "title": "File",
-          "type": "string"
-        }
-      },
-      "required": [
-        "file"
-      ],
-      "title": "Body_upload_trade_document_api_commodity_trades__trade_id__documents_post",
-      "type": "object"
-    },
-    "fastapi___compat__v2__Body_upload_trade_document_api_commodity_trades__trade_id__documents_post__2": {
-      "properties": {
-        "document_type": {
-          "title": "Document Type",
-          "type": "string"
-        },
-        "file": {
-          "contentMediaType": "application/octet-stream",
-          "title": "File",
-          "type": "string"
-        },
-        "step_number": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "title": "Step Number"
-        }
-      },
-      "required": [
-        "document_type",
-        "file"
-      ],
-      "title": "Body_upload_trade_document_api_commodity_trades__trade_id__documents_post",
       "type": "object"
     },
     "platform_api__models__APIClientCreate": {
