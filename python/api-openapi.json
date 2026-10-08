@@ -14316,6 +14316,129 @@
         ]
       }
     },
+    "/api/geopolitics/poll": {
+      "post": {
+        "description": "Manually trigger one poll cycle (staff only; scheduler runs it).",
+        "operationId": "trigger_poll_api_geopolitics_poll_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Trigger Poll",
+        "tags": [
+          "Geopolitics",
+          "Geopolitics"
+        ]
+      }
+    },
+    "/api/geopolitics/watches": {
+      "get": {
+        "description": "List the current user's watches + last brief time.",
+        "operationId": "list_watches_api_geopolitics_watches_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Watches",
+        "tags": [
+          "Geopolitics",
+          "Geopolitics"
+        ]
+      },
+      "post": {
+        "description": "Create a keyword watch (upsert per user+keywords).",
+        "operationId": "create_watch_api_geopolitics_watches_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Watch",
+        "tags": [
+          "Geopolitics",
+          "Geopolitics"
+        ]
+      }
+    },
+    "/api/geopolitics/watches/{watch_id}": {
+      "delete": {
+        "description": "Deactivate (soft-delete) one of the user's watches.",
+        "operationId": "delete_watch_api_geopolitics_watches__watch_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "watch_id",
+            "required": true,
+            "schema": {
+              "title": "Watch Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Watch",
+        "tags": [
+          "Geopolitics",
+          "Geopolitics"
+        ]
+      }
+    },
     "/api/gpu-subscriptions/catalog": {
       "get": {
         "description": "Customer rates and location inquiry status; no implied reservation.",
@@ -38912,6 +39035,42 @@
         "created_at"
       ],
       "title": "WalletResponse",
+      "type": "object"
+    },
+    "WatchCreate": {
+      "properties": {
+        "cooldown_minutes": {
+          "default": 60,
+          "maximum": 1440.0,
+          "minimum": 15.0,
+          "title": "Cooldown Minutes",
+          "type": "integer"
+        },
+        "keywords": {
+          "maxLength": 500,
+          "minLength": 2,
+          "title": "Keywords",
+          "type": "string"
+        },
+        "max_records": {
+          "default": 10,
+          "maximum": 50.0,
+          "minimum": 1.0,
+          "title": "Max Records",
+          "type": "integer"
+        },
+        "timespan_hours": {
+          "default": 6,
+          "maximum": 168.0,
+          "minimum": 1.0,
+          "title": "Timespan Hours",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "keywords"
+      ],
+      "title": "WatchCreate",
       "type": "object"
     },
     "WithdrawRequest": {
