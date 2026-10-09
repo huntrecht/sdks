@@ -6195,6 +6195,58 @@
         ]
       }
     },
+    "/api/arena/validation/reconcile": {
+      "post": {
+        "description": "Manually trigger the validation reconciler (staff only).\n\nDefaults to dry-run: reports what WOULD be validated without\ntouching the chain. Pass dry_run=false to submit.",
+        "operationId": "trigger_validation_reconcile_api_arena_validation_reconcile_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 25,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "dry_run",
+            "required": false,
+            "schema": {
+              "default": true,
+              "title": "Dry Run",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Trigger Validation Reconcile",
+        "tags": [
+          "TradeArena"
+        ]
+      }
+    },
     "/api/arena/yield/estimate": {
       "get": {
         "description": "Get estimated yield for an order based on collateral amount.\n\nQuery params:\n- order_value: Total order value in USD\n\nReturns:\n- estimated_yield: Estimated yield in USD (assuming 3% APY, 7-day duration)\n- collateral_amount: Required collateral (3.81% of order value)\n- apy: Current APY from yield strategy\n- duration_days: Typical order duration",
@@ -9302,6 +9354,48 @@
         ]
       }
     },
+    "/api/commodity/offers/{offer_id}/procedure-summary": {
+      "post": {
+        "description": "Generate + store the supplier procedure summary (owner or staff).\n\nEnglish v1; the 23-language set from the call plan stays an open item.",
+        "operationId": "generate_procedure_summary_api_commodity_offers__offer_id__procedure_summary_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Generate Procedure Summary",
+        "tags": [
+          "Commodity Trading",
+          "Commodity Trading"
+        ]
+      }
+    },
     "/api/commodity/public/offers": {
       "get": {
         "description": "List all active public offers.\n\nNo authentication required.\nReturns offer details with required roles and profit margin.",
@@ -9427,6 +9521,229 @@
           }
         },
         "summary": "Get Public Offer",
+        "tags": [
+          "Public Commodity Offers"
+        ]
+      }
+    },
+    "/api/commodity/public/offers/{offer_id}/arena-activity": {
+      "get": {
+        "description": "Are traders betting on this offer in TradeArena?\n\nPublic. Matches open arena commodity orders by commodity type and\nstreams recent commitments (machine/human, side, entry). No auth.",
+        "operationId": "get_offer_arena_activity_api_commodity_public_offers__offer_id__arena_activity_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Offer Arena Activity",
+        "tags": [
+          "Public Commodity Offers"
+        ]
+      }
+    },
+    "/api/commodity/public/offers/{offer_id}/arena-activity/comments": {
+      "get": {
+        "description": "Public comment thread on an offer's arena activity.",
+        "operationId": "list_arena_comments_api_commodity_public_offers__offer_id__arena_activity_comments_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "title": "Offer Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Arena Comments",
+        "tags": [
+          "Public Commodity Offers"
+        ]
+      },
+      "post": {
+        "description": "Post a comment (authenticated users only).",
+        "operationId": "post_arena_comment_api_commodity_public_offers__offer_id__arena_activity_comments_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArenaCommentIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Post Arena Comment",
+        "tags": [
+          "Public Commodity Offers"
+        ]
+      }
+    },
+    "/api/commodity/public/offers/{offer_id}/arena-activity/like": {
+      "post": {
+        "description": "Toggle the caller's like (authenticated users only).",
+        "operationId": "toggle_arena_like_api_commodity_public_offers__offer_id__arena_activity_like_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Toggle Arena Like",
+        "tags": [
+          "Public Commodity Offers"
+        ]
+      }
+    },
+    "/api/commodity/public/offers/{offer_id}/arena-activity/likes": {
+      "get": {
+        "description": "Like count (+ whether the caller liked). Public read.",
+        "operationId": "get_arena_likes_api_commodity_public_offers__offer_id__arena_activity_likes_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Arena Likes",
         "tags": [
           "Public Commodity Offers"
         ]
@@ -25030,6 +25347,48 @@
         ]
       }
     },
+    "/api/trade-calls/procedures/{trade_id}": {
+      "get": {
+        "description": "Procedure choices for scheduling: offer summaries + General.\n\nParticipants, or staff oversight. Summaries generated on demand via\nPOST /api/commodity/offers/{id}/procedure-summary.",
+        "operationId": "list_trade_procedures_api_trade_calls_procedures__trade_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trade_id",
+            "required": true,
+            "schema": {
+              "title": "Trade Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Trade Procedures",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
     "/api/trade-calls/schedule": {
       "post": {
         "description": "Schedule a procedure call: participant-gated, Cal.com mint attempted.",
@@ -25065,6 +25424,48 @@
           }
         },
         "summary": "Schedule Call",
+        "tags": [
+          "Trade Calls",
+          "Trade Calls"
+        ]
+      }
+    },
+    "/api/trade-calls/{call_id}": {
+      "get": {
+        "description": "Single call with full transcript (participants, or staff oversight).",
+        "operationId": "get_call_api_trade_calls__call_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Call",
         "tags": [
           "Trade Calls",
           "Trade Calls"
@@ -32047,6 +32448,19 @@
       "title": "AllocationUpdateRequest",
       "type": "object"
     },
+    "ArenaCommentIn": {
+      "properties": {
+        "body": {
+          "title": "Body",
+          "type": "string"
+        }
+      },
+      "required": [
+        "body"
+      ],
+      "title": "ArenaCommentIn",
+      "type": "object"
+    },
     "B2BInstallmentCheckoutRequest": {
       "properties": {
         "cart_items": {
@@ -33211,6 +33625,17 @@
             }
           ],
           "title": "Final Price"
+        },
+        "offer_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Offer Id"
         },
         "price_per_unit": {
           "anyOf": [
