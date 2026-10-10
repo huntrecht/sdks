@@ -26267,7 +26267,7 @@
         ]
       },
       "post": {
-        "description": "Create a new API client",
+        "description": "Create a new API client (secret hashed; shown only once)",
         "operationId": "create_api_client_api_user_api_clients_post",
         "requestBody": {
           "content": {
@@ -26321,7 +26321,7 @@
             "required": true,
             "schema": {
               "title": "Client Id",
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -26358,7 +26358,7 @@
     },
     "/api/user/api-clients/{client_id}/rotate": {
       "post": {
-        "description": "Rotate API client secret",
+        "description": "Rotate API client secret (old secret invalidated immediately)",
         "operationId": "rotate_api_client_api_user_api_clients__client_id__rotate_post",
         "parameters": [
           {
@@ -26367,7 +26367,7 @@
             "required": true,
             "schema": {
               "title": "Client Id",
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -40489,6 +40489,10 @@
     },
     "routers__settings__APIClientCreate": {
       "properties": {
+        "client_name": {
+          "title": "Client Name",
+          "type": "string"
+        },
         "description": {
           "anyOf": [
             {
@@ -40500,19 +40504,26 @@
           ],
           "title": "Description"
         },
-        "name": {
-          "title": "Name",
-          "type": "string"
-        },
-        "permissions": {
+        "scopes": {
+          "default": [],
           "items": {},
-          "title": "Permissions",
+          "title": "Scopes",
           "type": "array"
+        },
+        "webhook_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Webhook Url"
         }
       },
       "required": [
-        "name",
-        "permissions"
+        "client_name"
       ],
       "title": "APIClientCreate",
       "type": "object"
