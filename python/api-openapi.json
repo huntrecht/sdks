@@ -15255,6 +15255,48 @@
         ]
       }
     },
+    "/api/greencloud/applications/invoices/mine": {
+      "get": {
+        "description": "Caller's subscriptions with payment records (session auth).",
+        "operationId": "my_greencloud_invoices_api_greencloud_applications_invoices_mine_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "My Greencloud Invoices",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/applications/mine": {
+      "get": {
+        "description": "Caller's own applications with milestones (session auth).\n\nMatches primary_contact_email to the verified account email.\nBytes never included.",
+        "operationId": "my_greencloud_applications_api_greencloud_applications_mine_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "My Greencloud Applications",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
     "/api/greencloud/applications/notice": {
       "get": {
         "description": "Return the exact notice version a client must accept before submission.",
@@ -15270,6 +15312,57 @@
           }
         },
         "summary": "Get Preagreement Notice",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/applications/usage": {
+      "get": {
+        "description": "Stored GPU-hour readings for one subscription/month (session auth).\n\nOwner or staff only. Month format YYYY-MM.",
+        "operationId": "my_greencloud_usage_api_greencloud_applications_usage_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "subscription_id",
+            "required": true,
+            "schema": {
+              "title": "Subscription Id",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "month",
+            "required": true,
+            "schema": {
+              "title": "Month",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Greencloud Usage",
         "tags": [
           "GreenCloud Applications",
           "GreenCloud Intake"
@@ -15312,6 +15405,48 @@
           }
         },
         "summary": "Get Greencloud Application",
+        "tags": [
+          "GreenCloud Applications",
+          "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/applications/{reference}/console": {
+      "get": {
+        "description": "Staff-only console view: milestones + linked billing + Exhibit-C state.\n\nLinks applicant email to account subscriptions (Shopify-era billing);\nusage stays per-subscription via /usage. Never exposes bytes.",
+        "operationId": "greencloud_application_console_api_greencloud_applications__reference__console_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reference",
+            "required": true,
+            "schema": {
+              "title": "Reference",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Greencloud Application Console",
         "tags": [
           "GreenCloud Applications",
           "GreenCloud Intake"
@@ -15472,6 +15607,27 @@
           }
         },
         "summary": "Get Inquiry Locations",
+        "tags": [
+          "GreenCloud Options",
+          "GreenCloud Options"
+        ]
+      }
+    },
+    "/api/greencloud/status": {
+      "get": {
+        "description": "Public console status feed for the marketing site (greenbox \u00a75.4).\n\nSame payload builder as the Platform API feed \u2014 no PII, costs, or\ninternals. Cacheable; client-side fetch with baked-in fallback.",
+        "operationId": "get_console_status_api_greencloud_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Console Status",
         "tags": [
           "GreenCloud Options",
           "GreenCloud Options"
