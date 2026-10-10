@@ -1551,6 +1551,66 @@
         "summary": "Get Roles"
       }
     },
+    "/api/admin/settings/notifications": {
+      "get": {
+        "description": "List notification settings with spec (for the admin UI).",
+        "operationId": "get_notification_settings_api_admin_settings_notifications_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Notification Settings",
+        "tags": [
+          "Admin Settings",
+          "Admin Settings"
+        ]
+      },
+      "put": {
+        "description": "Update allowlisted notification settings (validated).",
+        "operationId": "update_notification_settings_api_admin_settings_notifications_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Notification Settings",
+        "tags": [
+          "Admin Settings",
+          "Admin Settings"
+        ]
+      }
+    },
     "/api/admin/settlements": {
       "get": {
         "description": "Admin endpoint - Get settlement batches with pagination.\n\nQuery params:\n- status: Filter by settlement status (pending, processing, completed, completed_with_errors)\n- limit: Number of records to return (default 50, max 100)\n- offset: Pagination offset",
@@ -15394,6 +15454,27 @@
         "tags": [
           "GreenCloud Applications",
           "GreenCloud Intake"
+        ]
+      }
+    },
+    "/api/greencloud/locations": {
+      "get": {
+        "description": "Inquiry locations from the intake allowlist (single source of truth).\n\nPublic. The form must render these \u2014 not a hardcoded list.",
+        "operationId": "get_inquiry_locations_api_greencloud_locations_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Inquiry Locations",
+        "tags": [
+          "GreenCloud Options",
+          "GreenCloud Options"
         ]
       }
     },
@@ -37509,6 +37590,20 @@
         "marketing_content_id"
       ],
       "title": "SendNewsletterRequest",
+      "type": "object"
+    },
+    "SettingsUpdate": {
+      "properties": {
+        "settings": {
+          "additionalProperties": true,
+          "title": "Settings",
+          "type": "object"
+        }
+      },
+      "required": [
+        "settings"
+      ],
+      "title": "SettingsUpdate",
       "type": "object"
     },
     "SettlementAccountsResponse": {
