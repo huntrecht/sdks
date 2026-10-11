@@ -17610,6 +17610,68 @@
         ]
       }
     },
+    "/api/marketing/recipients/overview": {
+      "get": {
+        "description": "Subscribed total + provider-based daily cap status (staff only).",
+        "operationId": "recipients_overview_api_marketing_recipients_overview_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Recipients Overview",
+        "tags": [
+          "Product Marketing",
+          "Product Marketing"
+        ]
+      }
+    },
+    "/api/marketing/recipients/upload": {
+      "post": {
+        "description": "Bulk-add newsletter recipients from a CSV upload (staff only).\n\nColumns: email (required) + optional first_name, last_name,\ncustomer_type (d2c|b2b|both, default both). Invalid rows are skipped\nand reported; existing emails are updated, never duplicated.",
+        "operationId": "upload_recipients_api_marketing_recipients_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_recipients_api_marketing_recipients_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload Recipients",
+        "tags": [
+          "Product Marketing",
+          "Product Marketing"
+        ]
+      }
+    },
     "/api/marketing/send-newsletter": {
       "post": {
         "description": "Send approved newsletter to recipients",
@@ -33300,6 +33362,20 @@
         "file"
       ],
       "title": "Body_upload_order_dataset_upload_order_quote_dataset_post",
+      "type": "object"
+    },
+    "Body_upload_recipients_api_marketing_recipients_upload_post": {
+      "properties": {
+        "file": {
+          "contentMediaType": "application/octet-stream",
+          "title": "File",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file"
+      ],
+      "title": "Body_upload_recipients_api_marketing_recipients_upload_post",
       "type": "object"
     },
     "Body_upload_trade_document_api_commodity_trades__trade_id__documents_post": {
