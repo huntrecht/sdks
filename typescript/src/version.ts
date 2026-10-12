@@ -3,4 +3,4 @@
  * Bumped by scripts/release.sh alongside package.json (do not edit by hand
  * outside a release).
  */
-export const SDK_VERSION = '0.2.0';
+export const SDK_VERSION = '0.3.0';
