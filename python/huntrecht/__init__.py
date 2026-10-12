@@ -60,7 +60,7 @@ from huntrecht.types_ import (
     LinkedAccountsResponse,
 )
 
-__version__ = "0.1.32"
+__version__ = "0.2.0"
 __all__ = [
     "HuntrechtClient",
     "HuntrechtError",
