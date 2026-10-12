@@ -28111,6 +28111,68 @@
         ]
       }
     },
+    "/api/v1/greencloud/calculator": {
+      "post": {
+        "description": "Authoritative catalog calculations, not a binding quote or capacity reservation. No contact details or account data.",
+        "operationId": "calculate_estimate_api_v1_greencloud_calculator_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalculatorRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Calculate a public GreenCloud estimate",
+        "tags": [
+          "Platform API - GreenCloud Pricing",
+          "GreenCloud Pricing"
+        ]
+      }
+    },
+    "/api/v1/greencloud/pricing": {
+      "get": {
+        "description": "Customer-safe SKUs/rates/flags for the marketing site. No PII. Cacheable.",
+        "operationId": "pricing_feed_api_v1_greencloud_pricing_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Public GreenCloud pricing feed",
+        "tags": [
+          "Platform API - GreenCloud Pricing",
+          "GreenCloud Pricing"
+        ]
+      }
+    },
     "/api/v1/kyc": {
       "get": {
         "description": "Retrieve a list of KYC/onboarding submissions for the authenticated user.",
@@ -33574,6 +33636,40 @@
       ],
       "title": "BusinessType",
       "type": "string"
+    },
+    "CalculatorRequest": {
+      "properties": {
+        "nodes": {
+          "default": 1,
+          "maximum": 256.0,
+          "minimum": 1.0,
+          "title": "Nodes",
+          "type": "integer"
+        },
+        "sku": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Sku",
+          "type": "string"
+        },
+        "term_months": {
+          "default": 12,
+          "enum": [
+            3,
+            6,
+            12,
+            24,
+            36
+          ],
+          "title": "Term Months",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sku"
+      ],
+      "title": "CalculatorRequest",
+      "type": "object"
     },
     "CancelResponse": {
       "description": "Response schema for settlement cancellation",
