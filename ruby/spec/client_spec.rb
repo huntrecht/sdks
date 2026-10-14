@@ -168,6 +168,19 @@ describe "Huntrecht Ruby SDK" do
     assert_equal "/app-proxy/payment-methods", @client.last_call[:path]
   end
 
+  it "covers greencloud pricing + calculator (2 ops, public)" do
+    @client.greencloud.pricing
+    assert_equal "/greencloud/pricing", @client.last_call[:path]
+    assert_equal false, @client.last_call[:auth_required]
+    @client.greencloud.calculate_estimate("GC-H200", nodes: 20, term_months: 6)
+    assert_equal "/greencloud/calculator", @client.last_call[:path]
+    assert_equal({ sku: "GC-H200", nodes: 20, term_months: 6 },
+                 @client.last_call[:json])
+    assert_raises(ArgumentError) do
+      @client.greencloud.calculate_estimate("GC-H200", term_months: 9)
+    end
+  end
+
   it "covers linked payments (4 ops)" do
     @client.linked_payments.check_eligibility("c1")
     assert_equal "/linked-payments/check-eligibility", @client.last_call[:path]

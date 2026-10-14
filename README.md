@@ -27,7 +27,7 @@ sdk/
 
 ## API Coverage (v1)
 
-All SDKs cover the complete Platform API v1 surface — **41 endpoints** across **13 resource groups**:
+All SDKs cover the complete Platform API v1 surface — **42 endpoints** across **14 resource groups**:
 
 | Resource | Endpoints | Scope |
 |----------|-----------|-------|
@@ -42,6 +42,7 @@ All SDKs cover the complete Platform API v1 surface — **41 endpoints** across 
 | `users` | 2 | Me, get by ID |
 | `storefront` | 5 | Collections, products, search |
 | `priceDrops` | 2 | List, featured (public) |
+| `greencloud` | 2 | Pricing feed, calculator (public) |
 | `appProxy` | 4 | Shopify theme proxy |
 | `linkedPayments` | 4 | Eligibility, link wallet/bank |
 

@@ -65,6 +65,7 @@ export class HuntrechtClient {
   readonly users: UsersAPI;
   readonly storefront: StorefrontAPI;
   readonly priceDrops: PriceDropsAPI;
+  readonly greencloud: GreenCloudAPI;
   readonly appProxy: AppProxyAPI;
   readonly linkedPayments: LinkedPaymentsAPI;
 
@@ -94,6 +95,7 @@ export class HuntrechtClient {
     this.users = r.users;
     this.storefront = r.storefront;
     this.priceDrops = r.priceDrops;
+    this.greencloud = r.greencloud;
     this.appProxy = r.appProxy;
     this.linkedPayments = r.linkedPayments;
   }
@@ -451,6 +453,27 @@ export class PriceDropsAPI extends APIResource {
   }
 }
 
+export const GREENCLOUD_CALCULATOR_TERMS = [3, 6, 12, 24, 36] as const;
+
+export class GreenCloudAPI extends APIResource {
+  async pricing() {
+    return this.request('GET', '/api/v1/greencloud/pricing', { authRequired: false });
+  }
+  async calculateEstimate(opts: { sku: string; nodes?: number; termMonths?: number }) {
+    const { sku, nodes = 1, termMonths = 12 } = opts;
+    if (!(GREENCLOUD_CALCULATOR_TERMS as readonly number[]).includes(termMonths)) {
+      throw new Error(`termMonths must be one of ${GREENCLOUD_CALCULATOR_TERMS.join(', ')}`);
+    }
+    if (!Number.isInteger(nodes) || nodes < 1 || nodes > 256) {
+      throw new Error('nodes must be an integer 1..256');
+    }
+    return this.request('POST', '/api/v1/greencloud/calculator', {
+      json: { sku, nodes, term_months: termMonths },
+      authRequired: false,
+    });
+  }
+}
+
 export class AppProxyAPI extends APIResource {
   async collections(opts: { first?: number; signature?: string } = {}) {
     const { first = 20, signature } = opts;
@@ -515,6 +538,7 @@ function createResources(client: HuntrechtClient) {
     users: new UsersAPI(client),
     storefront: new StorefrontAPI(client),
     priceDrops: new PriceDropsAPI(client),
+    greencloud: new GreenCloudAPI(client),
     appProxy: new AppProxyAPI(client),
     linkedPayments: new LinkedPaymentsAPI(client),
   };

@@ -377,6 +377,46 @@ func (s *PriceDropsService) Featured(ctx context.Context, limit int) (result, er
 	return out, err
 }
 
+// GreenCloudService reads published catalog pricing (public).
+type GreenCloudService struct{ client *Client }
+
+// CalculatorTerms are the allowed estimate terms (months).
+var GreenCloudCalculatorTerms = []int{3, 6, 12, 24, 36}
+
+// Pricing returns the public catalog feed.
+func (s *GreenCloudService) Pricing(ctx context.Context) (result, error) {
+	var out result
+	err := s.client.do(ctx, "GET", "/greencloud/pricing", nil, nil, &out, false)
+	return out, err
+}
+
+// EstimateParams is the calculator request body.
+type EstimateParams struct {
+	SKU         string `json:"sku"`
+	Nodes       int    `json:"nodes"`
+	TermMonths  int    `json:"term_months"`
+}
+
+// CalculateEstimate posts a non-binding server-calculated estimate.
+func (s *GreenCloudService) CalculateEstimate(ctx context.Context, p EstimateParams) (result, error) {
+	allowed := false
+	for _, t := range GreenCloudCalculatorTerms {
+		if p.TermMonths == t {
+			allowed = true
+			break
+		}
+	}
+	if !allowed {
+		return result{}, fmt.Errorf("term_months must be one of %v", GreenCloudCalculatorTerms)
+	}
+	if p.Nodes < 1 || p.Nodes > 256 {
+		return result{}, fmt.Errorf("nodes must be 1..256")
+	}
+	var out result
+	err := s.client.do(ctx, "POST", "/greencloud/calculator", nil, p, &out, false)
+	return out, err
+}
+
 // AppProxyService calls theme-safe proxy endpoints (public).
 type AppProxyService struct{ client *Client }
 

@@ -326,6 +326,35 @@ impl PriceDropsApi<'_> {
     }
 }
 
+/// Published GreenCloud catalog pricing (public).
+pub struct GreenCloudApi<'a> {
+    pub(crate) client: &'a Client,
+}
+
+impl GreenCloudApi<'_> {
+    /// Allowed calculator terms (months).
+    pub const CALCULATOR_TERMS: [i64; 5] = [3, 6, 12, 24, 36];
+    /// Public pricing feed.
+    pub async fn pricing(&self) -> Result<Value, HuntrechtError> {
+        self.client
+            .request(Method::GET, "/greencloud/pricing", &[], None, false)
+            .await
+    }
+    /// Non-binding server-calculated estimate.
+    pub async fn calculate_estimate(&self, sku: &str, nodes: i64, term_months: i64) -> Result<Value, HuntrechtError> {
+        if !Self::CALCULATOR_TERMS.contains(&term_months) {
+            return Err(HuntrechtError::ValidationError(format!("term_months must be one of {:?}", Self::CALCULATOR_TERMS)));
+        }
+        if nodes < 1 || nodes > 256 {
+            return Err(HuntrechtError::ValidationError("nodes must be 1..256".into()));
+        }
+        self.client
+            .request(Method::POST, "/greencloud/calculator", &[],
+                Some(body(&[("sku", json!(sku)), ("nodes", json!(nodes)), ("term_months", json!(term_months))])), false)
+            .await
+    }
+}
+
 /// Theme-safe proxy endpoints (public).
 pub struct AppProxyApi<'a> {
     pub(crate) client: &'a Client,

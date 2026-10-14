@@ -92,6 +92,7 @@ class HuntrechtClient:
         from huntrecht.users import UsersAPI
         from huntrecht.storefront import StorefrontAPI
         from huntrecht.price_drops import PriceDropsAPI
+        from huntrecht.greencloud import GreenCloudAPI
         from huntrecht.app_proxy import AppProxyAPI
         from huntrecht.linked_payments import LinkedPaymentsAPI
 
@@ -106,6 +107,7 @@ class HuntrechtClient:
         self.users = UsersAPI(self)
         self.storefront = StorefrontAPI(self)
         self.price_drops = PriceDropsAPI(self)
+        self.greencloud = GreenCloudAPI(self)
         self.app_proxy = AppProxyAPI(self)
         self.linked_payments = LinkedPaymentsAPI(self)
 
