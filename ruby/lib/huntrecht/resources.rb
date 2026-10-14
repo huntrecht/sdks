@@ -260,6 +260,27 @@ module Huntrecht
       end
     end
 
+    # Published GreenCloud catalog pricing (public).
+    class GreenCloudAPI < Base
+      CALCULATOR_TERMS = [3, 6, 12, 24, 36].freeze
+
+      def pricing
+        request("GET", "/greencloud/pricing", auth_required: false)
+      end
+
+      def calculate_estimate(sku, nodes: 1, term_months: 12)
+        unless CALCULATOR_TERMS.include?(term_months)
+          raise ArgumentError, "term_months must be one of #{CALCULATOR_TERMS.join(", ")}"
+        end
+        unless nodes.is_a?(Integer) && nodes.between?(1, 256)
+          raise ArgumentError, "nodes must be an integer 1..256"
+        end
+        request("POST", "/greencloud/calculator",
+                json: { sku: sku, nodes: nodes, term_months: term_months },
+                auth_required: false)
+      end
+    end
+
     # Theme-safe proxy endpoints (public).
     class AppProxyAPI < Base
       def collections(first: 20, signature: nil)

@@ -65,3 +65,37 @@ describe('CreditRiskAPI', () => {
     expect(lastUrl).toContain('/api/v1/credit-improvement/apply-boosts');
   });
 });
+
+describe('GreenCloudAPI', () => {
+  let client: HuntrechtClient;
+  let lastUrl: string;
+  let lastInit: RequestInit | undefined;
+
+  beforeEach(() => {
+    client = new HuntrechtClient({ accessToken: 'test-token' });
+    (client as unknown as Record<string, unknown>)._tokenExpiresAt =
+      Date.now() + 3600_000;
+    vi.stubGlobal('fetch', (url: string, init?: RequestInit) => {
+      lastUrl = url;
+      lastInit = init;
+      return mockJson({ ok: true });
+    });
+  });
+
+  it('pricing hits the public feed without auth', async () => {
+    await client.greencloud.pricing();
+    expect(lastUrl).toContain('/api/v1/greencloud/pricing');
+    expect(lastInit?.headers).not.toMatchObject({ Authorization: expect.anything() });
+  });
+
+  it('calculateEstimate posts sku/nodes/term', async () => {
+    await client.greencloud.calculateEstimate({ sku: 'GC-H200', nodes: 20, termMonths: 6 });
+    expect(lastUrl).toContain('/api/v1/greencloud/calculator');
+    expect(lastInit?.method).toBe('POST');
+    expect(String(lastInit?.body)).toContain('"term_months":6');
+  });
+
+  it('rejects terms outside 3/6/12/24/36', async () => {
+    await expect(client.greencloud.calculateEstimate({ sku: 'GC-H200', termMonths: 9 })).rejects.toThrow();
+  });
+});

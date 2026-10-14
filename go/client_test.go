@@ -97,4 +97,19 @@ func TestCorePaths(t *testing.T) {
 	if seen != "GET /api/v1/price-drops" {
 		t.Errorf("got %q", seen)
 	}
+	if _, err := c.GreenCloud.Pricing(ctx); err != nil {
+		t.Fatal(err)
+	}
+	if seen != "GET /api/v1/greencloud/pricing" {
+		t.Errorf("got %q", seen)
+	}
+	if _, err := c.GreenCloud.CalculateEstimate(ctx, EstimateParams{SKU: "GC-H200", Nodes: 20, TermMonths: 6}); err != nil {
+		t.Fatal(err)
+	}
+	if seen != "POST /api/v1/greencloud/calculator" {
+		t.Errorf("got %q", seen)
+	}
+	if _, err := c.GreenCloud.CalculateEstimate(ctx, EstimateParams{SKU: "GC-H200", Nodes: 1, TermMonths: 9}); err == nil {
+		t.Error("expected error for term 9")
+	}
 }
