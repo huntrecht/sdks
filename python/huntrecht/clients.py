@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import builtins
+
 from huntrecht.base import APIResource
 
 
@@ -18,8 +20,8 @@ class ClientsAPI(APIResource):
         client_name: str,
         description: str | None = None,
         webhook_url: str | None = None,
-        ip_allowlist: list[str] | None = None,
-        scopes: list[str] | None = None,
+        ip_allowlist: builtins.list[str] | None = None,
+        scopes: builtins.list[str] | None = None,
     ) -> dict:
         """Create a new API client. Returns secret only once."""
         body: dict = {"client_name": client_name}

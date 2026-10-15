@@ -62,6 +62,7 @@ class HuntrechtClient:
     ):
         self.base_url = (
             base_url or os.getenv("HUNTRECHT_BASE_URL", DEFAULT_BASE_URL)
+            or DEFAULT_BASE_URL
         ).rstrip("/")
         self.client_id = client_id or os.getenv("HUNTRECHT_CLIENT_ID", "")
         self.client_secret = client_secret or os.getenv("HUNTRECHT_CLIENT_SECRET", "")
@@ -205,15 +206,12 @@ class HuntrechtClient:
             from huntrecht.auth import AuthAPI
 
             auth = AuthAPI(self)
-            try:
-                tokens = auth.token()
-                self._access_token = tokens["access_token"]
-                self._refresh_token = tokens.get("refresh_token")
-                self._token_expires_at = (
-                    time.time() + tokens.get("expires_in", 1800) - 60
-                )
-            except AuthenticationError:
-                raise
+            tokens = auth.token()
+            self._access_token = tokens["access_token"]
+            self._refresh_token = tokens.get("refresh_token")
+            self._token_expires_at = (
+                time.time() + tokens.get("expires_in", 1800) - 60
+            )
         else:
             raise AuthenticationError(
                 "No access token and no client credentials. "
@@ -228,7 +226,7 @@ class HuntrechtClient:
 
         try:
             data = response.json()
-        except Exception:
+        except ValueError:
             data = {"raw": response.text}
 
         if response.status_code == 401:
@@ -282,7 +280,7 @@ class HuntrechtClient:
         """Close the underlying HTTP client."""
         self._http.close()
 
-    def __enter__(self) -> HuntrechtClient:
+    def __enter__(self):
         return self
 
     def __exit__(self, *args: object) -> None:
@@ -292,4 +290,4 @@ class HuntrechtClient:
         try:
             self.close()
         except Exception:
-            pass
+            logger.debug("Error closing HTTP client", exc_info=True)
