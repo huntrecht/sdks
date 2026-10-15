@@ -99,6 +99,7 @@ export type {
   StorefrontAPI,
   PriceDropsAPI,
   GreenCloudAPI,
+  ArenaAPI,
   AppProxyAPI,
   LinkedPaymentsAPI,
 } from './client.js';

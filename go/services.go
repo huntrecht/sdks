@@ -396,7 +396,6 @@ type EstimateParams struct {
 	Nodes       int    `json:"nodes"`
 	TermMonths  int    `json:"term_months"`
 }
-
 // CalculateEstimate posts a non-binding server-calculated estimate.
 func (s *GreenCloudService) CalculateEstimate(ctx context.Context, p EstimateParams) (result, error) {
 	allowed := false
@@ -414,6 +413,95 @@ func (s *GreenCloudService) CalculateEstimate(ctx context.Context, p EstimatePar
 	}
 	var out result
 	err := s.client.do(ctx, "POST", "/greencloud/calculator", nil, p, &out, false)
+	return out, err
+}
+
+// ArenaService executes TradeArena mutations (auth required).
+type ArenaService struct{ client *Client }
+
+// CreateOrder creates an arena order.
+func (s *ArenaService) CreateOrder(ctx context.Context, body map[string]any) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/orders", nil, body, &out, true)
+	return out, err
+}
+
+// Commit commits to an arena order.
+func (s *ArenaService) Commit(ctx context.Context, orderID string, body map[string]any) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/orders/"+orderID+"/commit", nil, body, &out, true)
+	return out, err
+}
+
+// Settle triggers settlement for an order.
+func (s *ArenaService) Settle(ctx context.Context, orderID string, price float64) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/orders/"+orderID+"/settle", nil, map[string]any{"settlement_price": price}, &out, true)
+	return out, err
+}
+
+// Execute executes a settled order via the swap executor.
+func (s *ArenaService) Execute(ctx context.Context, orderID string, body map[string]any) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/orders/"+orderID+"/execute", nil, body, &out, true)
+	return out, err
+}
+
+// Generate creates one order with oracle pricing.
+func (s *ArenaService) Generate(ctx context.Context, body map[string]any) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/agent/generate", nil, body, &out, true)
+	return out, err
+}
+
+// GenerateBatch generates a batch of orders across asset types.
+func (s *ArenaService) GenerateBatch(ctx context.Context) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/agent/generate-batch", nil, nil, &out, true)
+	return out, err
+}
+
+// MarketSignal creates an order from a market signal.
+func (s *ArenaService) MarketSignal(ctx context.Context, body map[string]any) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/agent/market-signal", nil, body, &out, true)
+	return out, err
+}
+
+// AnalyzeOnly analyzes a signal without creating an order.
+func (s *ArenaService) AnalyzeOnly(ctx context.Context, body map[string]any) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/agent/analyze-only", nil, body, &out, true)
+	return out, err
+}
+
+// InsuranceClaim submits an insurance claim.
+func (s *ArenaService) InsuranceClaim(ctx context.Context, orderID, commitmentID, claimType string, amount float64, evidence map[string]any) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/risk/insurance/claim",
+		values("order_id", orderID, "commitment_id", commitmentID, "claim_type", claimType, "claimed_amount", amount),
+		map[string]any{"evidence": evidence}, &out, true)
+	return out, err
+}
+
+// BondYieldOrder creates a monthly bond yield order.
+func (s *ArenaService) BondYieldOrder(ctx context.Context, bondID string, month int) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/bonds/"+bondID+"/yield-order", nil, map[string]any{"month": month}, &out, true)
+	return out, err
+}
+
+// ReleaseBreaker releases a circuit breaker (staff).
+func (s *ArenaService) ReleaseBreaker(ctx context.Context, haltID string) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/risk/circuit-breaker/release", values("halt_id", haltID), nil, &out, true)
+	return out, err
+}
+
+// Reconcile runs the validation reconciler (staff).
+func (s *ArenaService) Reconcile(ctx context.Context, limit int, dryRun bool) (result, error) {
+	var out result
+	err := s.client.do(ctx, "POST", "/arena/validation/reconcile", values("limit", limit, "dry_run", dryRun), nil, &out, true)
 	return out, err
 }
 

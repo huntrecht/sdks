@@ -99,3 +99,33 @@ describe('GreenCloudAPI', () => {
     await expect(client.greencloud.calculateEstimate({ sku: 'GC-H200', termMonths: 9 })).rejects.toThrow();
   });
 });
+
+describe('ArenaAPI', () => {
+  let client: HuntrechtClient;
+  let lastUrl: string;
+  let lastInit: RequestInit | undefined;
+
+  beforeEach(() => {
+    client = new HuntrechtClient({ accessToken: 'test-token' });
+    (client as unknown as Record<string, unknown>)._tokenExpiresAt =
+      Date.now() + 3600_000;
+    vi.stubGlobal('fetch', (url: string, init?: RequestInit) => {
+      lastUrl = url;
+      lastInit = init;
+      return mockJson({ ok: true });
+    });
+  });
+
+  it('settle posts settlement_price', async () => {
+    await client.arena.settle('o1', 10.5);
+    expect(lastUrl).toContain('/api/v1/arena/orders/o1/settle');
+    expect(lastInit?.method).toBe('POST');
+    expect(String(lastInit?.body)).toContain('"settlement_price":10.5');
+  });
+
+  it('reconcile passes limit/dry_run', async () => {
+    await client.arena.reconcile({ limit: 10, dryRun: false });
+    expect(lastUrl).toContain('/api/v1/arena/validation/reconcile');
+    expect(lastUrl).toContain('limit=10');
+  });
+});

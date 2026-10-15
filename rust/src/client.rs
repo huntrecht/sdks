@@ -142,6 +142,7 @@ impl Client {
     pub fn storefront(&self) -> resources::StorefrontApi<'_> { resources::StorefrontApi { client: self } }
     pub fn price_drops(&self) -> resources::PriceDropsApi<'_> { resources::PriceDropsApi { client: self } }
     pub fn greencloud(&self) -> resources::GreenCloudApi<'_> { resources::GreenCloudApi { client: self } }
+    pub fn arena(&self) -> resources::ArenaApi<'_> { resources::ArenaApi { client: self } }
     pub fn app_proxy(&self) -> resources::AppProxyApi<'_> { resources::AppProxyApi { client: self } }
     pub fn linked_payments(&self) -> resources::LinkedPaymentsApi<'_> { resources::LinkedPaymentsApi { client: self } }
 

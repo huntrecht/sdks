@@ -51,6 +51,7 @@ module Huntrecht
       @storefront = Resources::StorefrontAPI.new(self)
       @price_drops = Resources::PriceDropsAPI.new(self)
       @greencloud = Resources::GreenCloudAPI.new(self)
+      @arena = Resources::ArenaAPI.new(self)
       @app_proxy = Resources::AppProxyAPI.new(self)
       @linked_payments = Resources::LinkedPaymentsAPI.new(self)
     end
@@ -58,7 +59,7 @@ module Huntrecht
     attr_reader :auth, :clients, :orders, :payments, :subscriptions,
                 :credit, :credit_risk, :kyc, :quotes, :users, :storefront,
                 :price_drops, :app_proxy, :linked_payments,
-                :greencloud
+                :greencloud, :arena
 
     def client_secret
       @client_secret

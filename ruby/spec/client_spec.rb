@@ -181,6 +181,15 @@ describe "Huntrecht Ruby SDK" do
     end
   end
 
+  it "covers arena execution (12 ops)" do
+    @client.arena.settle("o1", 10.5)
+    assert_equal "/arena/orders/o1/settle", @client.last_call[:path]
+    assert_equal({ settlement_price: 10.5 }, @client.last_call[:json])
+    @client.arena.reconcile(limit: 10, dry_run: false)
+    assert_equal "/arena/validation/reconcile", @client.last_call[:path]
+    assert_equal true, @client.last_call[:auth_required]
+  end
+
   it "covers linked payments (4 ops)" do
     @client.linked_payments.check_eligibility("c1")
     assert_equal "/linked-payments/check-eligibility", @client.last_call[:path]

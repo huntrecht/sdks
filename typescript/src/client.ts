@@ -66,6 +66,7 @@ export class HuntrechtClient {
   readonly storefront: StorefrontAPI;
   readonly priceDrops: PriceDropsAPI;
   readonly greencloud: GreenCloudAPI;
+  readonly arena: ArenaAPI;
   readonly appProxy: AppProxyAPI;
   readonly linkedPayments: LinkedPaymentsAPI;
 
@@ -96,6 +97,7 @@ export class HuntrechtClient {
     this.storefront = r.storefront;
     this.priceDrops = r.priceDrops;
     this.greencloud = r.greencloud;
+    this.arena = r.arena;
     this.appProxy = r.appProxy;
     this.linkedPayments = r.linkedPayments;
   }
@@ -453,6 +455,50 @@ export class PriceDropsAPI extends APIResource {
   }
 }
 
+export class ArenaAPI extends APIResource {
+  async createOrder(body: Record<string, unknown>) {
+    return this.request('POST', '/api/v1/arena/orders', { json: body });
+  }
+  async commit(orderId: string, body: Record<string, unknown>) {
+    return this.request('POST', `/api/v1/arena/orders/${orderId}/commit`, { json: body });
+  }
+  async settle(orderId: string, settlementPrice: number) {
+    return this.request('POST', `/api/v1/arena/orders/${orderId}/settle`, { json: { settlement_price: settlementPrice } });
+  }
+  async execute(orderId: string, body: Record<string, unknown>) {
+    return this.request('POST', `/api/v1/arena/orders/${orderId}/execute`, { json: body });
+  }
+  async generate(body: Record<string, unknown>) {
+    return this.request('POST', '/api/v1/arena/agent/generate', { json: body });
+  }
+  async generateBatch() {
+    return this.request('POST', '/api/v1/arena/agent/generate-batch', {});
+  }
+  async marketSignal(body: Record<string, unknown>) {
+    return this.request('POST', '/api/v1/arena/agent/market-signal', { json: body });
+  }
+  async analyzeOnly(body: Record<string, unknown>) {
+    return this.request('POST', '/api/v1/arena/agent/analyze-only', { json: body });
+  }
+  async insuranceClaim(opts: { orderId: string; commitmentId: string; claimType: string; claimedAmount: number; evidence: Record<string, unknown> }) {
+    const { orderId, commitmentId, claimType, claimedAmount, evidence } = opts;
+    return this.request('POST', '/api/v1/arena/risk/insurance/claim', {
+      params: { order_id: orderId, commitment_id: commitmentId, claim_type: claimType, claimed_amount: claimedAmount },
+      json: { evidence },
+    });
+  }
+  async bondYieldOrder(bondId: string, month: number) {
+    return this.request('POST', `/api/v1/arena/bonds/${bondId}/yield-order`, { json: { month } });
+  }
+  async releaseBreaker(haltId: string) {
+    return this.request('POST', '/api/v1/arena/risk/circuit-breaker/release', { params: { halt_id: haltId } });
+  }
+  async reconcile(opts: { limit?: number; dryRun?: boolean } = {}) {
+    const { limit = 25, dryRun = true } = opts;
+    return this.request('POST', '/api/v1/arena/validation/reconcile', { params: { limit, dry_run: dryRun } });
+  }
+}
+
 export const GREENCLOUD_CALCULATOR_TERMS = [3, 6, 12, 24, 36] as const;
 
 export class GreenCloudAPI extends APIResource {
@@ -539,6 +585,7 @@ function createResources(client: HuntrechtClient) {
     storefront: new StorefrontAPI(client),
     priceDrops: new PriceDropsAPI(client),
     greencloud: new GreenCloudAPI(client),
+    arena: new ArenaAPI(client),
     appProxy: new AppProxyAPI(client),
     linkedPayments: new LinkedPaymentsAPI(client),
   };
