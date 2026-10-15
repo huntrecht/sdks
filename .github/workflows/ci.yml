@@ -3,11 +3,21 @@ name: CI — All SDKs
 on:
   pull_request:
     paths:
-      - 'sdk/**'
+      - 'python/**'
+      - 'typescript/**'
+      - 'go/**'
+      - 'ruby/**'
+      - 'rust/**'
+      - 'proto/**'
   push:
     branches: [main, develop]
     paths:
-      - 'sdk/**'
+      - 'python/**'
+      - 'typescript/**'
+      - 'go/**'
+      - 'ruby/**'
+      - 'rust/**'
+      - 'proto/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
