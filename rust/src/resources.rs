@@ -355,6 +355,67 @@ impl GreenCloudApi<'_> {
     }
 }
 
+/// TradeArena execution/mutations (auth required).
+pub struct ArenaApi<'a> {
+    pub(crate) client: &'a Client,
+}
+
+impl ArenaApi<'_> {
+    async fn post(&self, path: String, query: Vec<(&str, String)>, body: Option<Value>) -> Result<Value, HuntrechtError> {
+        self.client.request(Method::POST, &path, &query, body, true).await
+    }
+    /// Create an arena order.
+    pub async fn create_order(&self, body: Value) -> Result<Value, HuntrechtError> {
+        self.post("/arena/orders".into(), vec![], Some(body)).await
+    }
+    /// Commit to an order.
+    pub async fn commit(&self, order_id: &str, body: Value) -> Result<Value, HuntrechtError> {
+        self.post(format!("/arena/orders/{order_id}/commit"), vec![], Some(body)).await
+    }
+    /// Trigger settlement.
+    pub async fn settle(&self, order_id: &str, settlement_price: f64) -> Result<Value, HuntrechtError> {
+        self.post(format!("/arena/orders/{order_id}/settle"), vec![], Some(body(&[("settlement_price", json!(settlement_price))]))).await
+    }
+    /// Execute a settled order.
+    pub async fn execute(&self, order_id: &str, body: Value) -> Result<Value, HuntrechtError> {
+        self.post(format!("/arena/orders/{order_id}/execute"), vec![], Some(body)).await
+    }
+    /// Generate one order.
+    pub async fn generate(&self, body: Value) -> Result<Value, HuntrechtError> {
+        self.post("/arena/agent/generate".into(), vec![], Some(body)).await
+    }
+    /// Generate a batch of orders.
+    pub async fn generate_batch(&self) -> Result<Value, HuntrechtError> {
+        self.post("/arena/agent/generate-batch".into(), vec![], None).await
+    }
+    /// Create an order from a market signal.
+    pub async fn market_signal(&self, body: Value) -> Result<Value, HuntrechtError> {
+        self.post("/arena/agent/market-signal".into(), vec![], Some(body)).await
+    }
+    /// Analyze a signal without creating an order.
+    pub async fn analyze_only(&self, body: Value) -> Result<Value, HuntrechtError> {
+        self.post("/arena/agent/analyze-only".into(), vec![], Some(body)).await
+    }
+    /// Submit an insurance claim.
+    pub async fn insurance_claim(&self, order_id: &str, commitment_id: &str, claim_type: &str, claimed_amount: f64, evidence: Value) -> Result<Value, HuntrechtError> {
+        self.post("/arena/risk/insurance/claim".into(),
+            q(&[("order_id", Some(order_id.to_string())), ("commitment_id", Some(commitment_id.to_string())), ("claim_type", Some(claim_type.to_string())), ("claimed_amount", Some(claimed_amount.to_string()))]),
+            Some(body(&[("evidence", evidence)]))).await
+    }
+    /// Create a bond yield order.
+    pub async fn bond_yield_order(&self, bond_id: &str, month: i64) -> Result<Value, HuntrechtError> {
+        self.post(format!("/arena/bonds/{bond_id}/yield-order"), vec![], Some(body(&[("month", json!(month))]))).await
+    }
+    /// Release a circuit breaker (staff).
+    pub async fn release_breaker(&self, halt_id: &str) -> Result<Value, HuntrechtError> {
+        self.post("/arena/risk/circuit-breaker/release".into(), q(&[("halt_id", Some(halt_id.to_string()))]), None).await
+    }
+    /// Run the validation reconciler (staff).
+    pub async fn reconcile(&self, limit: i64, dry_run: bool) -> Result<Value, HuntrechtError> {
+        self.post("/arena/validation/reconcile".into(), q(&[("limit", Some(limit.to_string())), ("dry_run", Some(dry_run.to_string()))]), None).await
+    }
+}
+
 /// Theme-safe proxy endpoints (public).
 pub struct AppProxyApi<'a> {
     pub(crate) client: &'a Client,

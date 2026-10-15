@@ -112,4 +112,16 @@ func TestCorePaths(t *testing.T) {
 	if _, err := c.GreenCloud.CalculateEstimate(ctx, EstimateParams{SKU: "GC-H200", Nodes: 1, TermMonths: 9}); err == nil {
 		t.Error("expected error for term 9")
 	}
+	if _, err := c.Arena.Settle(ctx, "o1", 10.5); err != nil {
+		t.Fatal(err)
+	}
+	if seen != "POST /api/v1/arena/orders/o1/settle" {
+		t.Errorf("got %q", seen)
+	}
+	if _, err := c.Arena.Reconcile(ctx, 10, false); err != nil {
+		t.Fatal(err)
+	}
+	if seen != "POST /api/v1/arena/validation/reconcile" {
+		t.Errorf("got %q", seen)
+	}
 }

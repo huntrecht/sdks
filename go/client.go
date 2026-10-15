@@ -43,6 +43,7 @@ type Client struct {
 	Storefront     *StorefrontService
 	PriceDrops     *PriceDropsService
 	GreenCloud     *GreenCloudService
+	Arena          *ArenaService
 	LinkedPayments *LinkedPaymentsService
 }
 
@@ -71,6 +72,7 @@ func NewClient(opts ...Option) *Client {
 	c.Storefront = &StorefrontService{client: c}
 	c.PriceDrops = &PriceDropsService{client: c}
 	c.GreenCloud = &GreenCloudService{client: c}
+	c.Arena = &ArenaService{client: c}
 	c.LinkedPayments = &LinkedPaymentsService{client: c}
 
 	return c

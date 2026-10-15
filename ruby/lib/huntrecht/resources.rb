@@ -281,6 +281,65 @@ module Huntrecht
       end
     end
 
+    # TradeArena execution/mutations (auth required).
+    class ArenaAPI < Base
+      def create_order(body)
+        request("POST", "/arena/orders", json: body)
+      end
+
+      def commit(order_id, body)
+        request("POST", "/arena/orders/#{order_id}/commit", json: body)
+      end
+
+      def settle(order_id, settlement_price)
+        request("POST", "/arena/orders/#{order_id}/settle",
+                json: { settlement_price: settlement_price })
+      end
+
+      def execute(order_id, body)
+        request("POST", "/arena/orders/#{order_id}/execute", json: body)
+      end
+
+      def generate(body)
+        request("POST", "/arena/agent/generate", json: body)
+      end
+
+      def generate_batch
+        request("POST", "/arena/agent/generate-batch")
+      end
+
+      def market_signal(body)
+        request("POST", "/arena/agent/market-signal", json: body)
+      end
+
+      def analyze_only(body)
+        request("POST", "/arena/agent/analyze-only", json: body)
+      end
+
+      def insurance_claim(order_id:, commitment_id:, claim_type:,
+                          claimed_amount:, evidence:)
+        request("POST", "/arena/risk/insurance/claim",
+                params: { order_id: order_id, commitment_id: commitment_id,
+                          claim_type: claim_type, claimed_amount: claimed_amount },
+                json: { evidence: evidence })
+      end
+
+      def bond_yield_order(bond_id, month)
+        request("POST", "/arena/bonds/#{bond_id}/yield-order",
+                json: { month: month })
+      end
+
+      def release_breaker(halt_id)
+        request("POST", "/arena/risk/circuit-breaker/release",
+                params: { halt_id: halt_id })
+      end
+
+      def reconcile(limit: 25, dry_run: true)
+        request("POST", "/arena/validation/reconcile",
+                params: { limit: limit, dry_run: dry_run })
+      end
+    end
+
     # Theme-safe proxy endpoints (public).
     class AppProxyAPI < Base
       def collections(first: 20, signature: nil)
