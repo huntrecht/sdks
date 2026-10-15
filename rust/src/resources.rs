@@ -345,7 +345,7 @@ impl GreenCloudApi<'_> {
         if !Self::CALCULATOR_TERMS.contains(&term_months) {
             return Err(HuntrechtError::ValidationError(format!("term_months must be one of {:?}", Self::CALCULATOR_TERMS)));
         }
-        if nodes < 1 || nodes > 256 {
+        if !(1..=256).contains(&nodes) {
             return Err(HuntrechtError::ValidationError("nodes must be 1..256".into()));
         }
         self.client

@@ -8,8 +8,7 @@ class AppProxyAPI(APIResource):
 
     def collections(self, first: int = 20, signature: str | None = None) -> dict:
         """Get collections for Shopify theme."""
-        if first > 100:
-            first = 100
+        first = min(first, 100)
         params: dict = {"first": first}
         if signature:
             params["signature"] = signature
@@ -21,8 +20,7 @@ class AppProxyAPI(APIResource):
         self, handle: str, first: int = 20, signature: str | None = None
     ) -> dict:
         """Get collection with products for theme."""
-        if first > 250:
-            first = 250
+        first = min(first, 250)
         params: dict = {"first": first}
         if signature:
             params["signature"] = signature
@@ -35,8 +33,7 @@ class AppProxyAPI(APIResource):
 
     def price_drops(self, limit: int = 10, min_discount: float = 5.0) -> dict:
         """Get price drops for theme display (public)."""
-        if limit > 20:
-            limit = 20
+        limit = min(limit, 20)
         return self._request(
             "GET",
             "/app-proxy/price-drops",

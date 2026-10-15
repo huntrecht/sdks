@@ -15,7 +15,6 @@ class HuntrechtError(Exception):
 class AuthenticationError(HuntrechtError):
     """Raised when authentication fails."""
 
-    pass
 
 
 class RateLimitError(HuntrechtError):
@@ -29,16 +28,13 @@ class RateLimitError(HuntrechtError):
 class NotFoundError(HuntrechtError):
     """Raised when a requested resource is not found."""
 
-    pass
 
 
 class ValidationError(HuntrechtError):
     """Raised when request validation fails."""
 
-    pass
 
 
-class PermissionError(HuntrechtError):  # noqa: A001
+class PermissionError(HuntrechtError):
     """Raised when the user lacks permission for the operation."""
 
-    pass

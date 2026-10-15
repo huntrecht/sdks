@@ -7,20 +7,20 @@ rate-limit handling, and typed resource access.
 
 from __future__ import annotations
 
+import logging
 import os
 import time
-import logging
 from typing import Any
 
 import httpx
 
 from huntrecht.exceptions import (
-    HuntrechtError,
     AuthenticationError,
-    RateLimitError,
+    HuntrechtError,
     NotFoundError,
-    ValidationError,
     PermissionError,
+    RateLimitError,
+    ValidationError,
 )
 
 logger = logging.getLogger(__name__)
@@ -81,21 +81,21 @@ class HuntrechtClient:
         )
 
         # Resource accessors — lazy-loaded
+        from huntrecht.app_proxy import AppProxyAPI
+        from huntrecht.arena import ArenaAPI
         from huntrecht.auth import AuthAPI
         from huntrecht.clients import ClientsAPI
+        from huntrecht.credit import CreditAPI
+        from huntrecht.greencloud import GreenCloudAPI
+        from huntrecht.kyc import KycAPI
+        from huntrecht.linked_payments import LinkedPaymentsAPI
         from huntrecht.orders import OrdersAPI
         from huntrecht.payments import PaymentsAPI
-        from huntrecht.subscriptions import SubscriptionsAPI
-        from huntrecht.credit import CreditAPI
-        from huntrecht.kyc import KycAPI
-        from huntrecht.quotes import QuotesAPI
-        from huntrecht.users import UsersAPI
-        from huntrecht.storefront import StorefrontAPI
         from huntrecht.price_drops import PriceDropsAPI
-        from huntrecht.greencloud import GreenCloudAPI
-        from huntrecht.arena import ArenaAPI
-        from huntrecht.app_proxy import AppProxyAPI
-        from huntrecht.linked_payments import LinkedPaymentsAPI
+        from huntrecht.quotes import QuotesAPI
+        from huntrecht.storefront import StorefrontAPI
+        from huntrecht.subscriptions import SubscriptionsAPI
+        from huntrecht.users import UsersAPI
 
         self.auth = AuthAPI(self)
         self.clients = ClientsAPI(self)
@@ -285,7 +285,7 @@ class HuntrechtClient:
     def __enter__(self) -> HuntrechtClient:
         return self
 
-    def __exit__(self, *args: Any) -> None:
+    def __exit__(self, *args: object) -> None:
         self.close()
 
     def __del__(self) -> None:
