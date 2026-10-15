@@ -8,8 +8,7 @@ class StorefrontAPI(APIResource):
 
     def collections(self, first: int = 20, include_products: bool = False) -> dict:
         """List product collections."""
-        if first > 100:
-            first = 100
+        first = min(first, 100)
         return self._request(
             "GET",
             "/storefront/collections",
@@ -21,8 +20,7 @@ class StorefrontAPI(APIResource):
 
     def collection(self, handle: str, products_first: int = 20) -> dict:
         """Get collection by handle with products."""
-        if products_first > 250:
-            products_first = 250
+        products_first = min(products_first, 250)
         return self._request(
             "GET",
             f"/storefront/collections/{handle}",
@@ -35,8 +33,7 @@ class StorefrontAPI(APIResource):
         self, first: int = 20, after: str | None = None, b2b_only: bool = False
     ) -> dict:
         """List products with cursor pagination."""
-        if first > 100:
-            first = 100
+        first = min(first, 100)
         params: dict = {"first": first, "b2b_only": b2b_only}
         if after:
             params["after"] = after
@@ -48,8 +45,7 @@ class StorefrontAPI(APIResource):
 
     def search(self, query: str, first: int = 10, b2b_only: bool = False) -> dict:
         """Search products via Shopify predictive search."""
-        if first > 50:
-            first = 50
+        first = min(first, 50)
         return self._request(
             "GET",
             "/storefront/search",

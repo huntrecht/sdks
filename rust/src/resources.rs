@@ -345,7 +345,7 @@ impl GreenCloudApi<'_> {
         if !Self::CALCULATOR_TERMS.contains(&term_months) {
             return Err(HuntrechtError::ValidationError(format!("term_months must be one of {:?}", Self::CALCULATOR_TERMS)));
         }
-        if nodes < 1 || nodes > 256 {
+        if !(1..=256).contains(&nodes) {
             return Err(HuntrechtError::ValidationError("nodes must be 1..256".into()));
         }
         self.client
@@ -483,3 +483,33 @@ impl LinkedPaymentsApi<'_> {
 
 /// Re-exported for the doc example (`orders.data`, `order.id`…).
 pub use crate::types::OrderList;
+
+#[cfg(test)]
+mod greencloud_tests {
+    use super::*;
+
+    fn client() -> Client {
+        Client::builder().base_url("https://api.test").build().unwrap()
+    }
+
+    #[test]
+    fn calculator_terms_cover_v1() {
+        assert_eq!(GreenCloudApi::CALCULATOR_TERMS, [3, 6, 12, 24, 36]);
+    }
+
+    #[tokio::test]
+    async fn calculator_rejects_bad_term_without_network() {
+        let c = client();
+        let api = GreenCloudApi { client: &c };
+        let err = api.calculate_estimate("GC-H200", 1, 9).await.unwrap_err();
+        assert!(matches!(err, HuntrechtError::ValidationError(_)));
+    }
+
+    #[tokio::test]
+    async fn calculator_rejects_bad_nodes_without_network() {
+        let c = client();
+        let api = GreenCloudApi { client: &c };
+        let err = api.calculate_estimate("GC-H200", 0, 6).await.unwrap_err();
+        assert!(matches!(err, HuntrechtError::ValidationError(_)));
+    }
+}

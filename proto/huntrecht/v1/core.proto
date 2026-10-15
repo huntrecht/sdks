@@ -294,8 +294,8 @@ message KycSubmitRequest {
   string company_name = 1;
   string company_type = 2;
   optional string registration_number = 3;
-  optional map<string, string> address = 4;
-  optional map<string, string> contact_info = 5;
+  map<string, string> address = 4;
+  map<string, string> contact_info = 5;
 }
 
 message KycSubmitResponse {

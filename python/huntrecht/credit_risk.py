@@ -59,7 +59,7 @@ class CreditRiskAPI(APIResource):
             dict with credit assessment details
         """
         return self._request(
-            "GET", f"/company/credit-assessment", params={"user_id": user_id}
+            "GET", "/company/credit-assessment", params={"user_id": user_id}
         )
 
     def request_assessment(self, data: dict) -> dict:

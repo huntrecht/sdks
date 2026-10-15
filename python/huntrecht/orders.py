@@ -1,7 +1,6 @@
 """Orders resource — v1."""
 
 from huntrecht.base import APIResource
-from huntrecht.types_ import OrderListResponse
 
 
 class OrdersAPI(APIResource):

@@ -1,7 +1,6 @@
 """Auth API resource — v1."""
 
 from huntrecht.base import APIResource
-from huntrecht.types_ import TokenResponse
 
 
 class AuthAPI(APIResource):
