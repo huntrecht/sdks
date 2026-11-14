@@ -60,7 +60,7 @@ from huntrecht.types_ import (
     UserProfile,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 __all__ = [
     "ApiClientResponse",
     "ApiClientWithSecret",
